@@ -29,13 +29,16 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ComplexExpr implements PluralExpr
 {
+    private static final String[] ARG_NAMES = {"n"};
+    private static final Class[] ARG_TYPES = {int.class};
+
     private final ExpressionEvaluator ee;
 
     public ComplexExpr(String expression)
     {
         try
         {
-            this.ee = new ExpressionEvaluator(expression, int.class, new String[] {"n"}, new Class[] {int.class});
+            this.ee = new ExpressionEvaluator(expression, int.class, ARG_NAMES, ARG_TYPES);
         }
         catch (CompileException e)
         {
