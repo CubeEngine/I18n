@@ -7,14 +7,14 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>ConfigurationAPI</name>
-    <description>A Configuration API for Java</description>
+    <name>I18n</name>
+    <description>A I18n library for Java</description>
     <url>engine.cubeisland.de</url>
 
     <licenses>
         <license>
             <name>The MIT License (MIT)</name>
-            <url>LICENSE.txt</url>
+            <url>LICENSE</url>
         </license>
     </licenses>
 
@@ -118,7 +118,7 @@
                 <artifactId>maven-license-plugin</artifactId>
                 <version>1.10.b1</version>
                 <configuration>
-                    <header>/LICENSE.txt</header>
+                    <header>/LICENSE</header>
                     <strictCheck>true</strictCheck>
                     <includes>
                         <include>**/*.java</include>
