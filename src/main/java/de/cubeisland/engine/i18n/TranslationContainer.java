@@ -27,21 +27,23 @@ import java.util.Map;
 
 public class TranslationContainer
 {
-    private final Map<String, List<String>> messages;
+    private final Map<String, String> singularMessages;
+    private final Map<String, List<String>> pluralMessages;
 
-    public TranslationContainer(Map<String, List<String>> messages)
+    public TranslationContainer(Map<String, String> singularMessages, Map<String, List<String>> pluralMessages)
     {
-        this.messages = messages;
+        this.singularMessages = singularMessages;
+        this.pluralMessages = pluralMessages;
     }
 
-    private String getTranslation(String singular)
+    private String getSingular(String message)
     {
-        return this.getTranslation(singular, 0);
+        return this.singularMessages.get(message);
     }
 
-    private String getTranslation(String singular, int index)
+    private String getPlural(String message, int index)
     {
-        List<String> translations = this.messages.get(singular);
+        List<String> translations = this.pluralMessages.get(message);
         if (translations != null)
         {
             String translation = translations.get(index);
