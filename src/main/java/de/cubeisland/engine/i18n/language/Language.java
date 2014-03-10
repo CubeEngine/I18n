@@ -67,5 +67,5 @@ public interface Language
      */
     public Map<String, String> getMessages();
 
-    public boolean equals(Locale locale);
+    public boolean equalsLocale(Locale locale);
 }

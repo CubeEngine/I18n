@@ -83,7 +83,7 @@ public class NormalLanguage implements Language
     {
         if (messages == null)
         {
-            throw new NullPointerException("The messages must not be null!");
+            throw new IllegalArgumentException("The messages must not be null!");
         }
 
         this.messages.putAll(messages);
@@ -144,7 +144,7 @@ public class NormalLanguage implements Language
         return null;
     }
 
-    public boolean equals(Locale locale)
+    public boolean equalsLocale(Locale locale)
     {
         return this.locale.equals(locale);
     }
@@ -158,7 +158,7 @@ public class NormalLanguage implements Language
     @Override
     public boolean equals(Object obj)
     {
-        if (obj == null || getClass() != obj.getClass() || !(obj instanceof NormalLanguage))
+        if (!(obj instanceof NormalLanguage) || getClass() != obj.getClass())
         {
             return false;
         }

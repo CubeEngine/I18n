@@ -37,27 +37,15 @@ public class ClonedLanguage implements Language
     {
         if (locale == null)
         {
-            throw new NullPointerException("The code must not be null!");
+            throw new IllegalArgumentException("The code must not be null!");
         }
         if (original == null)
         {
-            throw new NullPointerException("The original must not be null!");
+            throw new IllegalArgumentException("The original must not be null!");
         }
 
         this.locale = locale;
         this.original = original;
-    }
-
-    public static ClonedLanguage clone(Locale locale, Language original)
-    {
-        try
-        {
-            return new ClonedLanguage(locale, original);
-        }
-        catch (IllegalArgumentException e)
-        {
-            return null;
-        }
     }
 
     public String getName()
@@ -85,7 +73,7 @@ public class ClonedLanguage implements Language
         return this.original.getMessages();
     }
 
-    public boolean equals(Locale locale)
+    public boolean equalsLocale(Locale locale)
     {
         return this.locale.equals(locale);
     }

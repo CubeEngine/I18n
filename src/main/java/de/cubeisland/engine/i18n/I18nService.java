@@ -34,4 +34,14 @@ public class I18nService
         this.sourceLanguage = source;
         this.loader = loader;
     }
+
+    public SourceLanguage getSourceLanguage()
+    {
+        return sourceLanguage;
+    }
+
+    public TranslationLoader getLoader()
+    {
+        return loader;
+    }
 }

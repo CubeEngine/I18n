@@ -68,7 +68,7 @@ public final class SourceLanguage implements Language
         return new HashMap<String, String>(this.messages);
     }
 
-    public boolean equals(Locale locale)
+    public boolean equalsLocale(Locale locale)
     {
         return this.locale.equals(locale);
     }
