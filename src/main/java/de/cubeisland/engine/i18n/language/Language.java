@@ -22,6 +22,8 @@
  */
 package de.cubeisland.engine.i18n.language;
 
+import de.cubeisland.engine.i18n.TranslationContainer;
+
 import java.util.Locale;
 import java.util.Map;
 
@@ -36,36 +38,43 @@ public interface Language
      *
      * @return a locale
      */
-    public Locale getLocale();
+    Locale getLocale();
 
     /**
      * Return the language's name
      *
      * @return the name
      */
-    public String getName();
+    String getName();
 
     /**
      * Returns the language's local name
      *
      * @return the local name
      */
-    public String getLocalName();
+    String getLocalName();
 
     /**
-     * Gets a translation from this language
+     * Gets a singular translation from this language
      *
-     * @param message the message
-     * @return the translation
+     * @param singular the message
+     * @return the translation or null
      */
-    public String getTranslation(String message);
+    String getTranslation(String singular);
+
+    /**
+     * Gets a plural translation from this language based on the amount
+     *
+     * @param plural the message in plural form
+     * @param n the amount
+     * @return the translated message or null
+     */
+    String getTranslation(String plural, int n);
 
     /**
      * Returns a map of all translations of the given category
      *
      * @return all translations of the category
      */
-    public Map<String, String> getMessages();
-
-    public boolean equalsLocale(Locale locale);
+    TranslationContainer getMessages();
 }

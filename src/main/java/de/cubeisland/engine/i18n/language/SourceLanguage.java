@@ -22,7 +22,11 @@
  */
 package de.cubeisland.engine.i18n.language;
 
+import de.cubeisland.engine.i18n.TranslationContainer;
+
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -31,11 +35,18 @@ import java.util.Map;
  */
 public final class SourceLanguage implements Language
 {
-    private final String code = "en_US";
-    private final Locale locale = Locale.US;
-    private final String name = "English";
-    private final String localName = "English";
-    private final Map<String, String> messages = new HashMap<String, String>();
+    private final Locale locale;
+    private final String name;
+    private final String localName;
+    private final TranslationContainer messages;
+
+    protected SourceLanguage(Locale locale, String name, String localName)
+    {
+        this.locale = locale;
+        this.name = name;
+        this.localName = localName;
+        messages = new TranslationContainer(new HashMap<String, String>(), new HashMap<String, List<String>>());
+    }
 
     public Locale getLocale()
     {
@@ -52,35 +63,34 @@ public final class SourceLanguage implements Language
         return this.localName;
     }
 
-    public String getTranslation(String message)
+    public String getTranslation(String singular)
     {
-        String translation = this.messages.get(message);
-        if (translation == null)
-        {
-            // TODO this.messages.put(message, translation = ChatFormat.parseFormats(message));
-        }
-
-        return translation;
+        return this.messages.getSingular(singular);
     }
 
-    public Map<String, String> getMessages()
+    public String getTranslation(String plural, int n)
     {
-        return new HashMap<String, String>(this.messages);
+        return this.messages.getPlural(plural, n);
     }
 
-    public boolean equalsLocale(Locale locale)
+    public TranslationContainer getMessages()
     {
-        return this.locale.equals(locale);
+        return this.messages;
     }
 
     @Override
     public int hashCode()
     {
-        return this.code.hashCode();
+        return this.locale.hashCode();
     }
 
-    public void clean()
+    @Override
+    public boolean equals(Object obj)
     {
-        this.messages.clear();
+        if (!(obj instanceof SourceLanguage) || getClass() != obj.getClass())
+        {
+            return false;
+        }
+        return this.locale.equals(((SourceLanguage)obj).locale);
     }
 }

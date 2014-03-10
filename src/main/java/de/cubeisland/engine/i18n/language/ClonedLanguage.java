@@ -22,8 +22,9 @@
  */
 package de.cubeisland.engine.i18n.language;
 
+import de.cubeisland.engine.i18n.TranslationContainer;
+
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * This class represents a clone of another language.
@@ -63,25 +64,35 @@ public class ClonedLanguage implements Language
         return this.original.getLocalName();
     }
 
-    public String getTranslation(String message)
+    public String getTranslation(String singular)
     {
-        return this.original.getTranslation(message);
+        return this.original.getTranslation(singular);
     }
 
-    public Map<String, String> getMessages()
+    public String getTranslation(String plural, int n)
+    {
+        return this.original.getTranslation(plural, n);
+    }
+
+    public TranslationContainer getMessages()
     {
         return this.original.getMessages();
-    }
-
-    public boolean equalsLocale(Locale locale)
-    {
-        return this.locale.equals(locale);
     }
 
     @Override
     public int hashCode()
     {
         return this.locale.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof ClonedLanguage) || getClass() != obj.getClass())
+        {
+            return false;
+        }
+        return this.locale.equals(((ClonedLanguage)obj).locale);
     }
 
     /**

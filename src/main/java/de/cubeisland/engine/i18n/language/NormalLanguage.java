@@ -22,9 +22,9 @@
  */
 package de.cubeisland.engine.i18n.language;
 
-import java.util.HashMap;
+import de.cubeisland.engine.i18n.TranslationContainer;
+
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * This class is a generic language that loads its translations from files.
@@ -34,10 +34,10 @@ public class NormalLanguage implements Language
     private final String name;
     private final String localName;
     private final Language parent;
-    private final Map<String, String> messages;
+    private final TranslationContainer messages;
     private final Locale locale;
 
-    public NormalLanguage(LocaleConfig config, Map<String, String> messages, Language parent)
+    public NormalLanguage(LocaleConfig config, TranslationContainer messages, Language parent)
     {
         if (config.getLocale() == null)
         {
@@ -56,7 +56,7 @@ public class NormalLanguage implements Language
         this.localName = config.getLocalName();
         this.locale = config.getLocale();
         this.parent = parent;
-        this.messages = new HashMap<String, String>(messages);
+        this.messages = messages;
     }
 
     public Locale getLocale()
@@ -74,34 +74,29 @@ public class NormalLanguage implements Language
         return this.localName;
     }
 
-    /**
-     * This method adds a map of translations to a category
-     *
-     * @param messages the translations
-     */
-    public void addMessages(Map<String, String> messages)
+    public String getTranslation(String singular)
     {
-        if (messages == null)
-        {
-            throw new IllegalArgumentException("The messages must not be null!");
-        }
-
-        this.messages.putAll(messages);
-    }
-
-    public String getTranslation(String message)
-    {
-        String translation = this.messages.get(message);
+        String translation = this.messages.getSingular(singular);
         if (translation == null && parent != null)
         {
-            translation = this.parent.getTranslation(message);
+            translation = this.parent.getTranslation(singular);
         }
         return translation;
     }
 
-    public Map<String, String> getMessages()
+    public String getTranslation(String plural, int n)
     {
-        return new HashMap<String, String>(this.messages);
+        String translation = this.messages.getPlural(plural, n);
+        if (translation == null && parent != null)
+        {
+            translation = this.parent.getTranslation(plural, n);
+        }
+        return translation;
+    }
+
+    public TranslationContainer getMessages()
+    {
+        return this.messages;
     }
 
     /**
@@ -112,41 +107,6 @@ public class NormalLanguage implements Language
     public Language getParent()
     {
         return this.parent;
-    }
-
-    @SuppressWarnings("unchecked")
-    private synchronized Map<String, String> loadMessages(String cat)
-    {
-        /*
-        try
-        {
-            final File messagesFile = new File(this.messageDir, cat + ".json");
-            Map<String, String> moduleMessages = this.objectMapper.readValue(messagesFile, Map.class);
-            moduleMessages = this.updateMessages(messagesFile, moduleMessages);
-
-            for (Map.Entry<String, String> translation : moduleMessages.entrySet())
-            {
-                if (!this.messages.containsKey(translation.getKey()))
-                {
-                    this.messages.put(translation.getKey(), ChatFormat.parseFormats(translation.getValue()));
-                }
-            }
-            return moduleMessages;
-        }
-        catch (FileNotFoundException ignored)
-        {
-            this.core.getLog().warn("The translation category " + cat + " was not found for the language ''" + this.code + "'' !");
-        }
-        catch (IOException e)
-        {
-            this.core.getLog().error(String.valueOf(e), e);
-        }*/
-        return null;
-    }
-
-    public boolean equalsLocale(Locale locale)
-    {
-        return this.locale.equals(locale);
     }
 
     @Override

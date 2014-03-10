@@ -36,12 +36,12 @@ public class TranslationContainer
         this.pluralMessages = pluralMessages;
     }
 
-    private String getSingular(String message)
+    public String getSingular(String message)
     {
         return this.singularMessages.get(message);
     }
 
-    private String getPlural(String message, int index)
+    public String getPlural(String message, int index)
     {
         List<String> translations = this.pluralMessages.get(message);
         if (translations != null)
