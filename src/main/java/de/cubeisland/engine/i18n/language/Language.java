@@ -25,7 +25,6 @@ package de.cubeisland.engine.i18n.language;
 import de.cubeisland.engine.i18n.TranslationContainer;
 
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * This interface represents a language containing translations.
@@ -58,6 +57,7 @@ public interface Language
      * Gets a singular translation from this language
      *
      * @param singular the message
+     *
      * @return the translation or null
      */
     String getTranslation(String singular);
@@ -66,7 +66,8 @@ public interface Language
      * Gets a plural translation from this language based on the amount
      *
      * @param plural the message in plural form
-     * @param n the amount
+     * @param n      the amount
+     *
      * @return the translated message or null
      */
     String getTranslation(String plural, int n);

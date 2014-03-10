@@ -24,11 +24,9 @@ package de.cubeisland.engine.i18n.language;
 
 import de.cubeisland.engine.i18n.TranslationContainer;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * This class represents the source language.
