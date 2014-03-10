@@ -46,7 +46,7 @@ public class GettextLoader implements TranslationLoader
         this.parser = new PoParser();
     }
 
-    public TranslationContainer loadTranslations(Locale locale)
+    public TranslationContainer loadTranslations(Locale locale) throws IOException
     {
         Map<String, String> singularMessages = new HashMap<String, String>();
         Map<String, List<String>> pluralMessages = new HashMap<String, List<String>>();
@@ -67,19 +67,12 @@ public class GettextLoader implements TranslationLoader
                 {
                     continue;
                 }
-                try
-                {
-                    Catalog catalog = this.parser.parseCatalog(catalogFile);
+                Catalog catalog = this.parser.parseCatalog(catalogFile);
 
-                    for (Message m : catalog)
-                    {
-                        singularMessages.put(m.getMsgid(), m.getMsgstr());
-                        pluralMessages.put(m.getMsgidPlural(), m.getMsgstrPlural());
-                    }
-                }
-                catch (IOException e)
+                for (Message m : catalog)
                 {
-                    throw new RuntimeException("Failed to load the message catalog from '" + catalogFile.getAbsolutePath() + "'", e);
+                    singularMessages.put(m.getMsgid(), m.getMsgstr());
+                    pluralMessages.put(m.getMsgidPlural(), m.getMsgstrPlural());
                 }
             }
         }

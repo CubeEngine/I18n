@@ -22,9 +22,10 @@
  */
 package de.cubeisland.engine.i18n;
 
+import java.io.IOException;
 import java.util.Locale;
 
 public interface TranslationLoader
 {
-    TranslationContainer loadTranslations(Locale locale);
+    TranslationContainer loadTranslations(Locale locale) throws IOException;
 }

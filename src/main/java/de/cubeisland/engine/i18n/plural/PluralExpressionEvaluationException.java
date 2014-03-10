@@ -22,39 +22,15 @@
  */
 package de.cubeisland.engine.i18n.plural;
 
-import org.codehaus.commons.compiler.CompileException;
-import org.codehaus.janino.ExpressionEvaluator;
-
-import java.lang.reflect.InvocationTargetException;
-
-public class ComplexExpr implements PluralExpr
+public class PluralExpressionEvaluationException extends RuntimeException
 {
-    private static final String[] ARG_NAMES = {"n"};
-    private static final Class[] ARG_TYPES = {int.class};
-
-    private final ExpressionEvaluator ee;
-
-    public ComplexExpr(String expression)
+    public PluralExpressionEvaluationException(String message)
     {
-        try
-        {
-            this.ee = new ExpressionEvaluator(expression, int.class, ARG_NAMES, ARG_TYPES);
-        }
-        catch (CompileException e)
-        {
-            throw new IllegalArgumentException("Failed to compile the given expression '" + expression + "' !", e);
-        }
+        super(message);
     }
 
-    public int evaluate(int n)
+    public PluralExpressionEvaluationException(String message, Throwable t)
     {
-        try
-        {
-            return (Integer)ee.evaluate(new Object[] {n});
-        }
-        catch (InvocationTargetException e)
-        {
-            throw new PluralExpressionEvaluationException("Failed to evaluate a plural expression!", e);
-        }
+        super(message, t);
     }
 }
