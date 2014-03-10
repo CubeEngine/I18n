@@ -23,6 +23,7 @@
 package de.cubeisland.engine.i18n;
 
 import de.cubeisland.engine.i18n.language.SourceLanguage;
+import de.cubeisland.engine.i18n.translation.TranslationLoader;
 
 public class I18nService
 {

@@ -22,8 +22,8 @@
  */
 package de.cubeisland.engine.i18n.loader;
 
-import de.cubeisland.engine.i18n.TranslationContainer;
-import de.cubeisland.engine.i18n.TranslationLoader;
+import de.cubeisland.engine.i18n.translation.TranslationContainer;
+import de.cubeisland.engine.i18n.translation.TranslationLoader;
 import org.fedorahosted.tennera.jgettext.Catalog;
 import org.fedorahosted.tennera.jgettext.Message;
 import org.fedorahosted.tennera.jgettext.PoParser;

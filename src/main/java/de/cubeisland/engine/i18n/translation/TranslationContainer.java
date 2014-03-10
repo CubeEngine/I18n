@@ -20,12 +20,38 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n;
+package de.cubeisland.engine.i18n.translation;
 
-import java.io.IOException;
-import java.util.Locale;
+import java.util.List;
+import java.util.Map;
 
-public interface TranslationLoader
+public class TranslationContainer
 {
-    TranslationContainer loadTranslations(Locale locale) throws IOException;
+    private final Map<String, String> singularMessages;
+    private final Map<String, List<String>> pluralMessages;
+
+    public TranslationContainer(Map<String, String> singularMessages, Map<String, List<String>> pluralMessages)
+    {
+        this.singularMessages = singularMessages;
+        this.pluralMessages = pluralMessages;
+    }
+
+    public String getSingular(String message)
+    {
+        return this.singularMessages.get(message);
+    }
+
+    public String getPlural(String message, int index)
+    {
+        List<String> translations = this.pluralMessages.get(message);
+        if (translations != null)
+        {
+            String translation = translations.get(index);
+            if (translation != null)
+            {
+                return translation;
+            }
+        }
+        return null;
+    }
 }

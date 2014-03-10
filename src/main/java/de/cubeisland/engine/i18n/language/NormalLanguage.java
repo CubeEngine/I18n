@@ -22,7 +22,7 @@
  */
 package de.cubeisland.engine.i18n.language;
 
-import de.cubeisland.engine.i18n.TranslationContainer;
+import de.cubeisland.engine.i18n.translation.TranslationContainer;
 
 import java.util.Locale;
 
