@@ -33,17 +33,24 @@ import java.util.Locale;
  */
 public final class SourceLanguage implements Language
 {
+    public static final SourceLanguage EN_US = new SourceLanguage(Locale.US, "English");
+
     private final Locale locale;
     private final String name;
     private final String localName;
     private final TranslationContainer messages;
 
-    protected SourceLanguage(Locale locale, String name, String localName)
+    public SourceLanguage(Locale locale, String name)
+    {
+        this(locale, name, name);
+    }
+
+    public SourceLanguage(Locale locale, String name, String localName)
     {
         this.locale = locale;
         this.name = name;
         this.localName = localName;
-        messages = new TranslationContainer(new HashMap<String, String>(), new HashMap<String, List<String>>());
+        this.messages = new TranslationContainer(new HashMap<String, String>(), new HashMap<String, List<String>>());
     }
 
     public Locale getLocale()
