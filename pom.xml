@@ -49,7 +49,7 @@
         <developer>
             <id>quick_wango</id>
             <name>Phillip Schichtel</name>
-            <email>quick_wango@code-infection.de</email>
+            <email>phillip.public@schich.tel</email>
             <roles>
                 <role>Project Lead</role>
             </roles>
@@ -57,7 +57,6 @@
         <developer>
             <id>boeserwolf91</id>
             <name>Stefan Wolf</name>
-            <email></email>
             <roles>
                 <role>Contributor</role>
             </roles>
@@ -78,11 +77,6 @@
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
             <version>2.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>de.cubeisland.engine</groupId>
-            <artifactId>configuration</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

@@ -24,21 +24,18 @@ package de.cubeisland.engine.i18n.language;
 
 import java.util.Locale;
 
-import de.cubeisland.engine.configuration.YamlConfiguration;
-
 /**
  * This configuration is used to parse the language configurations.
  */
-public class LocaleConfig extends YamlConfiguration
+public interface LocaleConfig
 {
+    Locale getLocale();
 
-    public Locale locale;
+    String getName();
 
-    public String name;
+    String getLocalName();
 
-    public String localName;
+    Locale getParent();
 
-    public Locale parent = null;
-
-    public Locale[] clones = null;
+    Locale[] getClones();
 }

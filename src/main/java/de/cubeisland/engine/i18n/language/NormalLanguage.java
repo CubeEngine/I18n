@@ -39,13 +39,22 @@ public class NormalLanguage implements Language
 
     public NormalLanguage(LocaleConfig config, Map<String, String> messages, Language parent)
     {
-        assert config.locale != null: "The code must not be null!";
-        assert config.name != null: "The name must not be null!";
-        assert config.localName != null: "The local name must not be null!";
+        if (config.getLocale() == null)
+        {
+            throw new IllegalArgumentException("The locale must not be null!");
+        }
+        if (config.getName() == null)
+        {
+            throw new IllegalArgumentException("The name must not be null!");
+        }
+        if (config.getLocalName() == null)
+        {
+            throw new IllegalArgumentException("The local name must not be null!");
+        }
 
-        this.name = config.name;
-        this.localName = config.localName;
-        this.locale = config.locale;
+        this.name = config.getName();
+        this.localName = config.getLocalName();
+        this.locale = config.getLocale();
         this.parent = parent;
         this.messages = new HashMap<String, String>(messages);
     }
