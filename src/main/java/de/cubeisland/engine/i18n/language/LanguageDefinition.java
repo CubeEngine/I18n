@@ -20,13 +20,22 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n.translation;
-
-import de.cubeisland.engine.i18n.TranslationLoadingException;
+package de.cubeisland.engine.i18n.language;
 
 import java.util.Locale;
 
-public interface TranslationLoader
+/**
+ * This configuration is used to parse the language configurations.
+ */
+public interface LanguageDefinition
 {
-    TranslationContainer loadTranslations(TranslationContainer container, Locale locale) throws TranslationLoadingException;
+    Locale getLocale();
+
+    String getName();
+
+    String getLocalName();
+
+    Locale getParent();
+
+    Locale[] getClones();
 }

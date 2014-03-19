@@ -64,6 +64,16 @@ public class ClonedLanguage implements Language
         return this.original.getLocalName();
     }
 
+    public Language getParent()
+    {
+        return this.original.getParent();
+    }
+
+    public LanguageDefinition getLanguageDefinition()
+    {
+        return this.original.getLanguageDefinition();
+    }
+
     public String getTranslation(String singular)
     {
         return this.original.getTranslation(singular);

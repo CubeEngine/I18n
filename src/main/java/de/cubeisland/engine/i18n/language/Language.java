@@ -54,6 +54,20 @@ public interface Language
     String getLocalName();
 
     /**
+     * Returns the language's parent
+     *
+     * @return the parent language
+     */
+    Language getParent();
+
+    /**
+     * Returns the language's definition
+     *
+     * @return the language definition
+     */
+    LanguageDefinition getLanguageDefinition();
+
+    /**
      * Gets a singular translation from this language
      *
      * @param singular the message

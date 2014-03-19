@@ -24,8 +24,6 @@ package de.cubeisland.engine.i18n.language;
 
 import de.cubeisland.engine.i18n.translation.TranslationContainer;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -35,9 +33,7 @@ public final class SourceLanguage implements Language
 {
     public static final SourceLanguage EN_US = new SourceLanguage(Locale.US, "English");
 
-    private final Locale locale;
-    private final String name;
-    private final String localName;
+    private final SourceLanguageDefinition definition;
     private final TranslationContainer messages;
 
     public SourceLanguage(Locale locale, String name)
@@ -47,25 +43,23 @@ public final class SourceLanguage implements Language
 
     public SourceLanguage(Locale locale, String name, String localName)
     {
-        this.locale = locale;
-        this.name = name;
-        this.localName = localName;
-        this.messages = new TranslationContainer(new HashMap<String, String>(), new HashMap<String, List<String>>());
+        this.definition = new SourceLanguageDefinition(locale, name, localName);
+        this.messages = new TranslationContainer();
     }
 
     public Locale getLocale()
     {
-        return this.locale;
+        return this.definition.getLocale();
     }
 
     public String getName()
     {
-        return this.name;
+        return this.definition.getName();
     }
 
     public String getLocalName()
     {
-        return this.localName;
+        return this.definition.getLocalName();
     }
 
     public String getTranslation(String singular)
@@ -83,10 +77,20 @@ public final class SourceLanguage implements Language
         return this.messages;
     }
 
+    public Language getParent()
+    {
+        return null;
+    }
+
+    public LanguageDefinition getLanguageDefinition()
+    {
+        return this.definition;
+    }
+
     @Override
     public int hashCode()
     {
-        return this.locale.hashCode();
+        return this.getLocale().hashCode();
     }
 
     @Override
@@ -96,6 +100,45 @@ public final class SourceLanguage implements Language
         {
             return false;
         }
-        return this.locale.equals(((SourceLanguage)obj).locale);
+        return this.getLocale().equals(((SourceLanguage)obj).getLocale());
+    }
+
+    private static class SourceLanguageDefinition implements LanguageDefinition
+    {
+        private Locale locale;
+        private String name;
+        private String localName;
+
+        private SourceLanguageDefinition(Locale locale, String name, String localName)
+        {
+            this.locale = locale;
+            this.name = name;
+            this.localName = localName;
+        }
+
+        public Locale getLocale()
+        {
+            return this.locale;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
+
+        public String getLocalName()
+        {
+            return this.localName;
+        }
+
+        public Locale getParent()
+        {
+            return null;
+        }
+
+        public Locale[] getClones()
+        {
+            return null;
+        }
     }
 }

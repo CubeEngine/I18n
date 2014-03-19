@@ -20,13 +20,26 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n.translation;
+package de.cubeisland.engine.i18n;
 
-import de.cubeisland.engine.i18n.TranslationLoadingException;
-
-import java.util.Locale;
-
-public interface TranslationLoader
+public class DefinitionLoadingException extends Exception
 {
-    TranslationContainer loadTranslations(TranslationContainer container, Locale locale) throws TranslationLoadingException;
+    public DefinitionLoadingException()
+    {
+    }
+
+    public DefinitionLoadingException(String message)
+    {
+        super(message);
+    }
+
+    public DefinitionLoadingException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
+
+    public DefinitionLoadingException(Throwable cause)
+    {
+        super(cause);
+    }
 }

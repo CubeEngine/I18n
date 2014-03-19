@@ -31,47 +31,47 @@ import java.util.Locale;
  */
 public class NormalLanguage implements Language
 {
-    private final String name;
-    private final String localName;
     private final Language parent;
     private final TranslationContainer messages;
-    private final Locale locale;
+    private final LanguageDefinition definition;
 
-    public NormalLanguage(LocaleConfig config, TranslationContainer messages, Language parent)
+    public NormalLanguage(LanguageDefinition definition, TranslationContainer messages, Language parent)
     {
-        if (config.getLocale() == null)
+        if (definition.getLocale() == null)
         {
             throw new IllegalArgumentException("The locale must not be null!");
         }
-        if (config.getName() == null)
+        if (definition.getName() == null)
         {
             throw new IllegalArgumentException("The name must not be null!");
         }
-        if (config.getLocalName() == null)
+        if (definition.getLocalName() == null)
         {
             throw new IllegalArgumentException("The local name must not be null!");
         }
-
-        this.name = config.getName();
-        this.localName = config.getLocalName();
-        this.locale = config.getLocale();
+        this.definition = definition;
         this.parent = parent;
         this.messages = messages;
     }
 
     public Locale getLocale()
     {
-        return this.locale;
+        return this.definition.getLocale();
     }
 
     public String getName()
     {
-        return this.name;
+        return this.definition.getName();
     }
 
     public String getLocalName()
     {
-        return this.localName;
+        return this.definition.getLocalName();
+    }
+
+    public LanguageDefinition getLanguageDefinition()
+    {
+        return this.definition;
     }
 
     public String getTranslation(String singular)
@@ -99,11 +99,6 @@ public class NormalLanguage implements Language
         return this.messages;
     }
 
-    /**
-     * Returns the language's parent
-     *
-     * @return the parent language
-     */
     public Language getParent()
     {
         return this.parent;
@@ -112,7 +107,7 @@ public class NormalLanguage implements Language
     @Override
     public int hashCode()
     {
-        return this.locale.hashCode();
+        return this.getLocale().hashCode();
     }
 
     @Override
@@ -122,6 +117,6 @@ public class NormalLanguage implements Language
         {
             return false;
         }
-        return this.locale.equals(((NormalLanguage)obj).locale);
+        return this.getLocale().equals(((NormalLanguage)obj).getLocale());
     }
 }

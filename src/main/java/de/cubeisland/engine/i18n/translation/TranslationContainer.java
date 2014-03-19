@@ -22,6 +22,7 @@
  */
 package de.cubeisland.engine.i18n.translation;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,11 @@ public class TranslationContainer
     {
         this.singularMessages = singularMessages;
         this.pluralMessages = pluralMessages;
+    }
+
+    public TranslationContainer()
+    {
+        this(new HashMap<String, String>(), new HashMap<String, List<String>>());
     }
 
     public String getSingular(String message)
@@ -53,5 +59,18 @@ public class TranslationContainer
             }
         }
         return null;
+    }
+
+    public void merge(Map<String, String> singularMessages, Map<String, List<String>> pluralMessages)
+    {
+        singularMessages.keySet().removeAll(this.singularMessages.keySet());
+        pluralMessages.keySet().removeAll(this.pluralMessages.keySet());
+        this.putAll(singularMessages, pluralMessages);
+    }
+
+    public void putAll(Map<String, String> singularMessages, Map<String, List<String>> pluralMessages)
+    {
+        this.singularMessages.putAll(singularMessages);
+        this.pluralMessages.putAll(pluralMessages);
     }
 }

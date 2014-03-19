@@ -22,18 +22,32 @@
  */
 package de.cubeisland.engine.i18n;
 
+import de.cubeisland.engine.i18n.language.ClonedLanguage;
+import de.cubeisland.engine.i18n.language.Language;
 import de.cubeisland.engine.i18n.language.SourceLanguage;
 import de.cubeisland.engine.i18n.translation.TranslationLoader;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class I18nService
 {
     private final SourceLanguage sourceLanguage;
-    private final TranslationLoader loader;
+    private final TranslationLoader tLoader;
+    private final LanguageLoader lLoader;
+    private final Locale defaultLocale;
 
-    public I18nService(SourceLanguage source, TranslationLoader loader)
+    private final Map<Locale, Language> languages = new HashMap<Locale, Language>();
+
+    public I18nService(SourceLanguage source, TranslationLoader tLoader, LanguageLoader lLoader, Locale defaultLocale)
     {
         this.sourceLanguage = source;
-        this.loader = loader;
+        this.tLoader = tLoader;
+        this.lLoader = lLoader;
+        this.defaultLocale = defaultLocale;
+
+        this.languages.put(this.getSourceLanguage().getLocale(), this.getSourceLanguage());
     }
 
     public SourceLanguage getSourceLanguage()
@@ -41,8 +55,53 @@ public class I18nService
         return sourceLanguage;
     }
 
-    public TranslationLoader getLoader()
+    public TranslationLoader getTranslationLoader()
     {
-        return loader;
+        return tLoader;
+    }
+
+    public LanguageLoader getLanguageLoader()
+    {
+        return lLoader;
+    }
+
+    public Locale getDefaultLocale()
+    {
+        return defaultLocale;
+    }
+
+    public Language getLanguage(Locale locale) throws TranslationLoadingException, DefinitionLoadingException
+    {
+        if (locale == null)
+        {
+            throw new NullPointerException("The locale must not be null!");
+        }
+        Language result = this.languages.get(locale);
+        if (result == null)
+        {
+            Language language = this.lLoader.loadLanguage(this, locale);
+            if (language == null)
+            {
+                return null;
+            }
+            result = language;
+            if (result instanceof ClonedLanguage)
+            {
+                Language original = ((ClonedLanguage)result).getOriginal();
+                this.languages.put(original.getLocale(), original);
+            }
+            this.languages.put(locale, result);
+        }
+        return result;
+    }
+
+    public Language getDefaultLanguage() throws TranslationLoadingException, DefinitionLoadingException
+    {
+        Language language = this.getLanguage(this.defaultLocale);
+        if (language == null)
+        {
+            language = this.getSourceLanguage();
+        }
+        return language;
     }
 }

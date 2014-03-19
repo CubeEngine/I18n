@@ -22,11 +22,46 @@
  */
 package de.cubeisland.engine.i18n;
 
+import de.cubeisland.engine.i18n.language.ClonedLanguage;
 import de.cubeisland.engine.i18n.language.Language;
+import de.cubeisland.engine.i18n.language.LanguageDefinition;
+import de.cubeisland.engine.i18n.language.NormalLanguage;
+import de.cubeisland.engine.i18n.translation.TranslationContainer;
 
 import java.util.Locale;
 
-public interface LanguageLoader
+public abstract class LanguageLoader
 {
-    Language loadLanguage(Locale locale);
+    public Language loadLanguage(I18nService service, Locale locale) throws TranslationLoadingException, DefinitionLoadingException
+    {
+        LanguageDefinition definition = this.loadDefinition(locale);
+        if (definition == null)
+        {
+            return null;
+        }
+        if (definition.getLocale().equals(locale))
+        {
+            Language parent = null;
+            if (definition.getParent() != null)
+            {
+                parent = service.getLanguage(definition.getParent());
+            }
+            // Main Locale of Configuration
+            return new NormalLanguage(definition, service.getTranslationLoader().loadTranslations(new TranslationContainer(), locale), parent);
+        }
+        else
+        {
+            // Cloned Locale of Configuration -> Get main Language first
+            Language mainLanguage = service.getLanguage(definition.getLocale());
+            if (mainLanguage != null)
+            {
+                // Create Clone
+                return new ClonedLanguage(locale, mainLanguage);
+            }
+            // else couldnt load main language
+        }
+        return null;
+    }
+
+    public abstract LanguageDefinition loadDefinition(Locale locale) throws DefinitionLoadingException;
 }

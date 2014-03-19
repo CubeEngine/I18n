@@ -1,4 +1,4 @@
-/**
+package de.cubeisland.engine.i18n; /**
  * The MIT License (MIT)
  *
  * Copyright (c) 2013 CubeEngineDev
@@ -20,22 +20,16 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n.language;
-
 import java.util.Locale;
 
-/**
- * This configuration is used to parse the language configurations.
- */
-public interface LocaleConfig
+public class I18nUtil
 {
-    Locale getLocale();
-
-    String getName();
-
-    String getLocalName();
-
-    Locale getParent();
-
-    Locale[] getClones();
+    public static String localeToString(Locale locale)
+    {
+        if (locale == null)
+        {
+            throw new NullPointerException("The locale must not be null!");
+        }
+        return locale.getLanguage().toLowerCase(Locale.US) + '_' + locale.getCountry().toUpperCase(Locale.US);
+    }
 }

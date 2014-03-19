@@ -22,14 +22,17 @@
  */
 package de.cubeisland.engine.i18n.loader;
 
+import de.cubeisland.engine.i18n.TranslationLoadingException;
 import de.cubeisland.engine.i18n.translation.TranslationContainer;
 import de.cubeisland.engine.i18n.translation.TranslationLoader;
 import org.fedorahosted.tennera.jgettext.Catalog;
 import org.fedorahosted.tennera.jgettext.Message;
 import org.fedorahosted.tennera.jgettext.PoParser;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -38,45 +41,54 @@ import java.util.Map;
 public class GettextLoader implements TranslationLoader
 {
     private final PoParser parser;
-    private final File baseDirectory;
+    private final List<URI> searchDirectories;
+    private final Charset charset;
 
-    public GettextLoader(File baseDirectory)
+    public GettextLoader(Charset charset, List<URI> searchDirectories)
     {
-        this.baseDirectory = baseDirectory;
+        this.charset = charset;
+        this.searchDirectories = searchDirectories;
         this.parser = new PoParser();
     }
 
-    public TranslationContainer loadTranslations(Locale locale) throws IOException
+    public TranslationContainer loadTranslations(TranslationContainer container, Locale locale) throws TranslationLoadingException
     {
         Map<String, String> singularMessages = new HashMap<String, String>();
         Map<String, List<String>> pluralMessages = new HashMap<String, List<String>>();
-
-        File localeFolder = new File(this.baseDirectory, locale.getLanguage().toLowerCase() + "_" + locale.getCountry().toLowerCase());
-
-        if (!localeFolder.exists() || !localeFolder.isDirectory())
+        for (URI searchDirectory : searchDirectories)
         {
-            return null;
-        }
-
-        File[] catalogFiles = localeFolder.listFiles();
-        if (catalogFiles != null)
-        {
-            for (File catalogFile : catalogFiles)
+            URI uri = searchDirectory.resolve(locale.getLanguage().toLowerCase() + "_" + locale.getCountry().toUpperCase() + ".po");
+            Catalog catalog = this.parseCatalog(uri);
+            if (catalog == null)
             {
-                if (!catalogFile.isFile())
+                catalog = this.parseCatalog(searchDirectory.resolve(locale.getLanguage().toLowerCase() + ".po"));
+            }
+            if (catalog != null)
+            {
+                for (Message message : catalog)
                 {
-                    continue;
-                }
-                Catalog catalog = this.parser.parseCatalog(catalogFile);
-
-                for (Message m : catalog)
-                {
-                    singularMessages.put(m.getMsgid(), m.getMsgstr());
-                    pluralMessages.put(m.getMsgidPlural(), m.getMsgstrPlural());
+                    singularMessages.put(message.getMsgid(), message.getMsgstr());
+                    pluralMessages.put(message.getMsgidPlural(), message.getMsgstrPlural());
                 }
             }
         }
+        container.merge(singularMessages, pluralMessages);
+        return container;
+    }
 
-        return new TranslationContainer(singularMessages, pluralMessages);
+    private Catalog parseCatalog(URI uri) throws TranslationLoadingException
+    {
+        try
+        {
+            return this.parser.parseCatalog(uri.toURL().openStream(), charset, true);
+        }
+        catch (MalformedURLException e)
+        {
+            throw new TranslationLoadingException(e);
+        }
+        catch (IOException ignore)
+        {
+            return null;
+        }
     }
 }
