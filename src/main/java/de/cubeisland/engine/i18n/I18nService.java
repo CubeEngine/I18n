@@ -27,6 +27,7 @@ import de.cubeisland.engine.i18n.language.Language;
 import de.cubeisland.engine.i18n.language.SourceLanguage;
 import de.cubeisland.engine.i18n.translation.TranslationLoader;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -103,5 +104,10 @@ public class I18nService
             language = this.getSourceLanguage();
         }
         return language;
+    }
+
+    public Collection<Language> getLoadedLanguages()
+    {
+        return this.languages.values();
     }
 }
