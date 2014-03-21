@@ -31,23 +31,25 @@ import org.fedorahosted.tennera.jgettext.PoParser;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class GettextLoader implements TranslationLoader
 {
     private final PoParser parser;
-    private final List<URI> searchDirectories;
+    private final List<URL> poFiles;
     private final Charset charset;
 
-    public GettextLoader(Charset charset, List<URI> searchDirectories)
+    public GettextLoader(Charset charset, List<URL> poFiles)
     {
         this.charset = charset;
-        this.searchDirectories = searchDirectories;
+        this.poFiles = poFiles;
         this.parser = new PoParser();
     }
 
@@ -55,14 +57,19 @@ public class GettextLoader implements TranslationLoader
     {
         Map<String, String> singularMessages = new HashMap<String, String>();
         Map<String, List<String>> pluralMessages = new HashMap<String, List<String>>();
-        for (URI searchDirectory : searchDirectories)
+        Set<URL> loadFrom = new LinkedHashSet<URL>();
+        for (URL poFile : poFiles)
         {
-            URI uri = searchDirectory.resolve(locale.getLanguage().toLowerCase() + "_" + locale.getCountry().toUpperCase() + ".po");
-            Catalog catalog = this.parseCatalog(uri);
-            if (catalog == null)
+            String fileName = poFile.toString();
+            if (fileName.endsWith(locale.getLanguage().toLowerCase() + "_" + locale.getCountry().toUpperCase() + ".po")
+                    || fileName.endsWith(locale.getLanguage().toLowerCase() + ".po"))
             {
-                catalog = this.parseCatalog(searchDirectory.resolve(locale.getLanguage().toLowerCase() + ".po"));
+                loadFrom.add(poFile);
             }
+        }
+        for (URL url : loadFrom)
+        {
+            Catalog catalog = this.parseCatalog(url);
             if (catalog != null)
             {
                 for (Message message : catalog)
@@ -71,16 +78,16 @@ public class GettextLoader implements TranslationLoader
                     pluralMessages.put(message.getMsgidPlural(), message.getMsgstrPlural());
                 }
             }
+            container.merge(singularMessages, pluralMessages);
         }
-        container.merge(singularMessages, pluralMessages);
         return container;
     }
 
-    private Catalog parseCatalog(URI uri) throws TranslationLoadingException
+    private Catalog parseCatalog(URL url) throws TranslationLoadingException
     {
         try
         {
-            return this.parser.parseCatalog(uri.toURL().openStream(), charset, true);
+            return this.parser.parseCatalog(url.openStream(), charset, true);
         }
         catch (MalformedURLException e)
         {

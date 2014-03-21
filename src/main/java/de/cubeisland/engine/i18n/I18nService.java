@@ -131,12 +131,12 @@ public class I18nService
         try
         {
             String translated = this.translate0(locale, toTranslate, n, true);
-            if (translated == null)
+            if (translated == null || translated.length() == 0)
             {
                 // Fallback to Default
                 translated = this.translate0(this.getDefaultLocale(), toTranslate, n, false);
             }
-            if (translated == null)
+            if (translated == null || translated.length() == 0)
             {
                 // Fallback to Source
                 if (n == 0)

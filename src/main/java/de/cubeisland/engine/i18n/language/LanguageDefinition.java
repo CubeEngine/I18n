@@ -38,4 +38,8 @@ public interface LanguageDefinition
     Locale getParent();
 
     Locale[] getClones();
+
+    int getPluralCount();
+
+    String getPluralExpression();
 }

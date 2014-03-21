@@ -86,6 +86,7 @@ public class NormalLanguage implements Language
 
     public String getTranslation(String plural, int n)
     {
+        // TODO convert n to index with PluralExpression
         String translation = this.messages.getPlural(plural, n);
         if (translation == null && parent != null)
         {

@@ -31,19 +31,19 @@ import java.util.Locale;
  */
 public final class SourceLanguage implements Language
 {
-    public static final SourceLanguage EN_US = new SourceLanguage(Locale.US, "English");
+    public static final SourceLanguage EN_US = new SourceLanguage(Locale.US, "English", 2, "n != 1");
 
     private final SourceLanguageDefinition definition;
     private final TranslationContainer messages;
 
-    public SourceLanguage(Locale locale, String name)
+    public SourceLanguage(Locale locale, String name, int pluralCount, String pluralExpression)
     {
-        this(locale, name, name);
+        this(locale, name, name, pluralCount, pluralExpression);
     }
 
-    public SourceLanguage(Locale locale, String name, String localName)
+    public SourceLanguage(Locale locale, String name, String localName, int pluralCount, String pluralExpression)
     {
-        this.definition = new SourceLanguageDefinition(locale, name, localName);
+        this.definition = new SourceLanguageDefinition(locale, name, localName, pluralCount, pluralExpression);
         this.messages = new TranslationContainer();
     }
 
@@ -64,12 +64,26 @@ public final class SourceLanguage implements Language
 
     public String getTranslation(String singular)
     {
-        return this.messages.getSingular(singular);
+        // TODO preprocessor
+        String result = this.messages.getSingular(singular);
+        if (result == null)
+        {
+            result = singular;
+            this.messages.putSingular(singular, result);
+        }
+        return result;
     }
 
     public String getTranslation(String plural, int n)
     {
-        return this.messages.getPlural(plural, n);
+        // TODO preprocessor
+        String result = this.messages.getPlural(plural, n);
+        if (result == null)
+        {
+            result = plural;
+            this.messages.putPlural(plural, result, n, this.definition.getPluralCount());
+        }
+        return result;
     }
 
     public TranslationContainer getMessages()
@@ -108,12 +122,16 @@ public final class SourceLanguage implements Language
         private Locale locale;
         private String name;
         private String localName;
+        private int pluralCount;
+        private String pluralExpression;
 
-        private SourceLanguageDefinition(Locale locale, String name, String localName)
+        private SourceLanguageDefinition(Locale locale, String name, String localName, int pluralCount, String pluralExpression)
         {
             this.locale = locale;
             this.name = name;
             this.localName = localName;
+            this.pluralCount = pluralCount;
+            this.pluralExpression = pluralExpression;
         }
 
         public Locale getLocale()
@@ -139,6 +157,16 @@ public final class SourceLanguage implements Language
         public Locale[] getClones()
         {
             return null;
+        }
+
+        public int getPluralCount()
+        {
+            return pluralCount;
+        }
+
+        public String getPluralExpression()
+        {
+            return pluralExpression;
         }
     }
 }

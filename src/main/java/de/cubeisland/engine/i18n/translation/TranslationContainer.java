@@ -22,6 +22,7 @@
  */
 package de.cubeisland.engine.i18n.translation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,5 +73,21 @@ public class TranslationContainer
     {
         this.singularMessages.putAll(singularMessages);
         this.pluralMessages.putAll(pluralMessages);
+    }
+
+    public void putSingular(String singular, String result)
+    {
+        this.singularMessages.put(singular, result);
+    }
+
+    public void putPlural(String plural, String result, int n, int maxN)
+    {
+        List<String> list = this.pluralMessages.get(plural);
+        if (list == null)
+        {
+            list = new ArrayList<String>(maxN);
+            this.pluralMessages.put(plural, list);
+        }
+        list.add(n, result);
     }
 }
