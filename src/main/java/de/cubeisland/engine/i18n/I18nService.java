@@ -118,18 +118,35 @@ public class I18nService
 
     public String translate(Locale locale, String toTranslate)
     {
+        return this.translateN(locale, toTranslate, 0);
+    }
+
+    public String translateN(String toTranslate, int n)
+    {
+        return this.translateN(this.getDefaultLocale(), toTranslate, n);
+    }
+
+    public String translateN(Locale locale, String toTranslate, int n)
+    {
         try
         {
-            String translated = this.translate0(locale, toTranslate, true);
+            String translated = this.translate0(locale, toTranslate, n, true);
             if (translated == null)
             {
                 // Fallback to Default
-                translated = this.translate0(this.getDefaultLocale(), toTranslate, false);
+                translated = this.translate0(this.getDefaultLocale(), toTranslate, n, false);
             }
             if (translated == null)
             {
                 // Fallback to Source
-                translated = this.getSourceLanguage().getTranslation(toTranslate);
+                if (n == 0)
+                {
+                    translated = this.getSourceLanguage().getTranslation(toTranslate);
+                }
+                else
+                {
+                    translated = this.getSourceLanguage().getTranslation(toTranslate, n);
+                }
             }
             return translated;
         }
@@ -143,17 +160,21 @@ public class I18nService
         }
     }
 
-    private String translate0(Locale locale, String toTranslate, boolean fallbackToBaseLocale) throws DefinitionLoadingException, TranslationLoadingException
+    private String translate0(Locale locale, String toTranslate, int n, boolean fallbackToBaseLocale) throws DefinitionLoadingException, TranslationLoadingException
     {
         Language language = this.getLanguage(locale);
         if (language != null)
         {
-            return language.getTranslation(toTranslate);
+            if (n == 0)
+            {
+                return language.getTranslation(toTranslate);
+            }
+            return language.getTranslation(toTranslate, n);
         }
         else if (fallbackToBaseLocale && !locale.getLanguage().toLowerCase().equals(locale.getCountry().toLowerCase()))
         {
             // Search BaseLocale
-            return this.translate0(new Locale(locale.getLanguage(), locale.getLanguage().toUpperCase()), toTranslate, false);
+            return this.translate0(new Locale(locale.getLanguage(), locale.getLanguage().toUpperCase()), toTranslate, n, false);
         }
         return null;
     }
