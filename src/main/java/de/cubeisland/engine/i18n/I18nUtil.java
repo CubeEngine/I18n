@@ -1,4 +1,4 @@
-package de.cubeisland.engine.i18n; /**
+/**
  * The MIT License (MIT)
  *
  * Copyright (c) 2013 CubeEngineDev
@@ -20,6 +20,7 @@ package de.cubeisland.engine.i18n; /**
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package de.cubeisland.engine.i18n;
 
 import java.util.Locale;
 
@@ -73,7 +74,6 @@ public class I18nUtil
         }
         return true;
     }
-
 
     public static Locale stringToLocale(String string)
     {
