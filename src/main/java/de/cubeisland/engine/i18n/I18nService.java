@@ -110,4 +110,51 @@ public class I18nService
     {
         return this.languages.values();
     }
+
+    public String translate(String toTranslate)
+    {
+        return this.translate(this.getDefaultLocale(), toTranslate);
+    }
+
+    public String translate(Locale locale, String toTranslate)
+    {
+        try
+        {
+            String translated = this.translate0(locale, toTranslate, true);
+            if (translated == null)
+            {
+                // Fallback to Default
+                translated = this.translate0(this.getDefaultLocale(), toTranslate, false);
+            }
+            if (translated == null)
+            {
+                // Fallback to Source
+                translated = this.getSourceLanguage().getTranslation(toTranslate);
+            }
+            return translated;
+        }
+        catch (DefinitionLoadingException e)
+        {
+            throw new TranslationException(e);
+        }
+        catch (TranslationLoadingException e)
+        {
+            throw new TranslationException(e);
+        }
+    }
+
+    private String translate0(Locale locale, String toTranslate, boolean fallbackToBaseLocale) throws DefinitionLoadingException, TranslationLoadingException
+    {
+        Language language = this.getLanguage(locale);
+        if (language != null)
+        {
+            return language.getTranslation(toTranslate);
+        }
+        else if (fallbackToBaseLocale && !locale.getLanguage().toLowerCase().equals(locale.getCountry().toLowerCase()))
+        {
+            // Search BaseLocale
+            return this.translate0(new Locale(locale.getLanguage(), locale.getLanguage().toUpperCase()), toTranslate, false);
+        }
+        return null;
+    }
 }
