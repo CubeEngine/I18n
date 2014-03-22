@@ -22,6 +22,8 @@
  */
 package de.cubeisland.engine.i18n.language;
 
+import de.cubeisland.engine.i18n.plural.NotOneExpr;
+import de.cubeisland.engine.i18n.plural.PluralExpr;
 import de.cubeisland.engine.i18n.translation.TranslationContainer;
 
 import java.util.Locale;
@@ -29,37 +31,18 @@ import java.util.Locale;
 /**
  * This class represents the source language.
  */
-public final class SourceLanguage implements Language
+public final class SourceLanguage extends NormalLanguage
 {
-    public static final SourceLanguage EN_US = new SourceLanguage(Locale.US, "English", 2, "n != 1");
+    public static final SourceLanguage EN_US = new SourceLanguage(Locale.US, "English", 2, new NotOneExpr());
 
-    private final SourceLanguageDefinition definition;
-    private final TranslationContainer messages;
-
-    public SourceLanguage(Locale locale, String name, int pluralCount, String pluralExpression)
+    public SourceLanguage(Locale locale, String name, int pluralCount, PluralExpr pluralExpression)
     {
         this(locale, name, name, pluralCount, pluralExpression);
     }
 
-    public SourceLanguage(Locale locale, String name, String localName, int pluralCount, String pluralExpression)
+    public SourceLanguage(Locale locale, String name, String localName, int pluralCount, PluralExpr pluralExpression)
     {
-        this.definition = new SourceLanguageDefinition(locale, name, localName, pluralCount, pluralExpression);
-        this.messages = new TranslationContainer();
-    }
-
-    public Locale getLocale()
-    {
-        return this.definition.getLocale();
-    }
-
-    public String getName()
-    {
-        return this.definition.getName();
-    }
-
-    public String getLocalName()
-    {
-        return this.definition.getLocalName();
+        super(new SourceLanguageDefinition(locale, name, localName, pluralCount, pluralExpression), new TranslationContainer(), null);
     }
 
     public String getTranslation(String singular)
@@ -77,11 +60,12 @@ public final class SourceLanguage implements Language
     public String getTranslation(String plural, int n)
     {
         // TODO preprocessor
-        String result = this.messages.getPlural(plural, n);
+        int index = this.getIndex(n);
+        String result = this.messages.getPlural(plural, index);
         if (result == null)
         {
             result = plural;
-            this.messages.putPlural(plural, result, n, this.definition.getPluralCount());
+            this.messages.putPlural(plural, result, index, this.definition.getPluralCount());
         }
         return result;
     }
@@ -123,9 +107,9 @@ public final class SourceLanguage implements Language
         private String name;
         private String localName;
         private int pluralCount;
-        private String pluralExpression;
+        private PluralExpr pluralExpression;
 
-        private SourceLanguageDefinition(Locale locale, String name, String localName, int pluralCount, String pluralExpression)
+        private SourceLanguageDefinition(Locale locale, String name, String localName, int pluralCount, PluralExpr pluralExpression)
         {
             this.locale = locale;
             this.name = name;
@@ -164,7 +148,7 @@ public final class SourceLanguage implements Language
             return pluralCount;
         }
 
-        public String getPluralExpression()
+        public PluralExpr getPluralExpression()
         {
             return pluralExpression;
         }

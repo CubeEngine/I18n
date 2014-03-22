@@ -22,6 +22,8 @@
  */
 package de.cubeisland.engine.i18n.language;
 
+import de.cubeisland.engine.i18n.plural.PluralExpr;
+
 import java.util.Locale;
 
 /**
@@ -41,5 +43,5 @@ public interface LanguageDefinition
 
     int getPluralCount();
 
-    String getPluralExpression();
+    PluralExpr getPluralExpression();
 }

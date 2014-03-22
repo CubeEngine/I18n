@@ -22,6 +22,7 @@
  */
 package de.cubeisland.engine.i18n.language;
 
+import de.cubeisland.engine.i18n.plural.PluralExpr;
 import de.cubeisland.engine.i18n.translation.TranslationContainer;
 
 import java.util.Locale;
@@ -32,8 +33,9 @@ import java.util.Locale;
 public class NormalLanguage implements Language
 {
     private final Language parent;
-    private final TranslationContainer messages;
-    private final LanguageDefinition definition;
+    protected final TranslationContainer messages;
+    protected final LanguageDefinition definition;
+    private PluralExpr pluralExpression;
 
     public NormalLanguage(LanguageDefinition definition, TranslationContainer messages, Language parent)
     {
@@ -52,6 +54,7 @@ public class NormalLanguage implements Language
         this.definition = definition;
         this.parent = parent;
         this.messages = messages;
+
     }
 
     public Locale getLocale()
@@ -86,8 +89,8 @@ public class NormalLanguage implements Language
 
     public String getTranslation(String plural, int n)
     {
-        // TODO convert n to index with PluralExpression
-        String translation = this.messages.getPlural(plural, n);
+        int index = this.getIndex(n);
+        String translation = this.messages.getPlural(plural, index);
         if (translation == null && parent != null)
         {
             translation = this.parent.getTranslation(plural, n);
@@ -119,5 +122,10 @@ public class NormalLanguage implements Language
             return false;
         }
         return this.getLocale().equals(((NormalLanguage)obj).getLocale());
+    }
+
+    protected final int getIndex(int n)
+    {
+        return this.definition.getPluralExpression().evaluate(n);
     }
 }
