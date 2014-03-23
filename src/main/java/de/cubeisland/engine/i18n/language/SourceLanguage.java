@@ -85,12 +85,6 @@ public final class SourceLanguage extends NormalLanguage
         return this.definition;
     }
 
-    @Override
-    public int hashCode()
-    {
-        return this.getLocale().hashCode();
-    }
-
     private static class SourceLanguageDefinition implements LanguageDefinition
     {
         private static final Locale[] NO_CLONES = new Locale[0];
