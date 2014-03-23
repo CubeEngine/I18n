@@ -91,18 +91,10 @@ public final class SourceLanguage extends NormalLanguage
         return this.getLocale().hashCode();
     }
 
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (!(obj instanceof SourceLanguage) || getClass() != obj.getClass())
-        {
-            return false;
-        }
-        return this.getLocale().equals(((SourceLanguage)obj).getLocale());
-    }
-
     private static class SourceLanguageDefinition implements LanguageDefinition
     {
+        private static final Locale[] NO_CLONES = new Locale[0];
+
         private Locale locale;
         private String name;
         private String localName;
@@ -137,8 +129,6 @@ public final class SourceLanguage extends NormalLanguage
         {
             return null;
         }
-
-        private static final Locale[] NO_CLONES = new Locale[0];
 
         public Locale[] getClones()
         {

@@ -22,15 +22,14 @@
  */
 package de.cubeisland.engine.i18n.loader;
 
-import de.cubeisland.engine.i18n.translation.TranslationLoadingException;
 import de.cubeisland.engine.i18n.translation.TranslationContainer;
 import de.cubeisland.engine.i18n.translation.TranslationLoader;
+import de.cubeisland.engine.i18n.translation.TranslationLoadingException;
 import org.fedorahosted.tennera.jgettext.Catalog;
 import org.fedorahosted.tennera.jgettext.Message;
 import org.fedorahosted.tennera.jgettext.PoParser;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -89,13 +88,9 @@ public class GettextLoader implements TranslationLoader
         {
             return this.parser.parseCatalog(url.openStream(), charset, true);
         }
-        catch (MalformedURLException e)
+        catch (IOException e)
         {
             throw new TranslationLoadingException(e);
-        }
-        catch (IOException ignore)
-        {
-            return null;
         }
     }
 }
