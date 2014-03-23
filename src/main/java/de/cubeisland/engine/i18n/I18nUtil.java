@@ -26,39 +26,29 @@ import java.util.Locale;
 
 public class I18nUtil
 {
+    private I18nUtil()
+    {
+    }
+
     public static String localeToString(Locale locale)
     {
         if (locale == null)
         {
-            throw new NullPointerException("The locale must not be null!");
+            throw new IllegalArgumentException("The locale must not be null!");
         }
         return locale.getLanguage().toLowerCase(Locale.US) + '_' + locale.getCountry().toUpperCase(Locale.US);
     }
 
     private static boolean mayBeRegionCode(String string)
     {
-        if (!isNumeric(string))
-        {
-            return false;
-        }
-        try
-        {
-            int countryCode = Integer.parseInt(string);
-            if (countryCode <= 999)
-            {
-                return true;
-            }
-        }
-        catch (NumberFormatException ignored)
-        {}
-        return false;
+        return isNumeric(string) && Integer.parseInt(string) <= 999;
     }
 
     private static boolean isNumeric(String string)
     {
         if (string == null)
         {
-            throw new NullPointerException("The string must not be null!");
+            throw new IllegalArgumentException("The string must not be null!");
         }
         final int len = string.length();
         if (len == 0)
@@ -81,14 +71,14 @@ public class I18nUtil
         {
             return Locale.getDefault();
         }
-        string = string.trim();
-        if (string.length() == 0)
+        String localeString = string.trim();
+        if (localeString.length() == 0)
         {
             return Locale.getDefault();
         }
 
-        string = string.replace('-', '_').replaceAll("[^a-z0-9_]", "");
-        String[] parts = string.split("_", 2);
+        localeString = localeString.replace('-', '_').replaceAll("[^a-z0-9_]", "");
+        String[] parts = localeString.split("_", 2);
 
         String language = parts[0];
         String country = "";

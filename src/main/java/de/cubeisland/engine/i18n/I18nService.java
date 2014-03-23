@@ -51,22 +51,22 @@ public class I18nService
         this.languages.put(this.getSourceLanguage().getLocale(), this.getSourceLanguage());
     }
 
-    public SourceLanguage getSourceLanguage()
+    public final SourceLanguage getSourceLanguage()
     {
         return sourceLanguage;
     }
 
-    public TranslationLoader getTranslationLoader()
+    public final TranslationLoader getTranslationLoader()
     {
         return tLoader;
     }
 
-    public LanguageLoader getLanguageLoader()
+    public final LanguageLoader getLanguageLoader()
     {
         return lLoader;
     }
 
-    public Locale getDefaultLocale()
+    public final Locale getDefaultLocale()
     {
         return defaultLocale;
     }
@@ -75,7 +75,7 @@ public class I18nService
     {
         if (locale == null)
         {
-            throw new NullPointerException("The locale must not be null!");
+            throw new IllegalArgumentException("The locale must not be null!");
         }
         Language result = this.languages.get(locale);
         if (result == null)
@@ -171,7 +171,7 @@ public class I18nService
             }
             return language.getTranslation(plural, n);
         }
-        else if (fallbackToBaseLocale && !locale.getLanguage().toLowerCase().equals(locale.getCountry().toLowerCase()))
+        else if (fallbackToBaseLocale && !locale.getLanguage().equalsIgnoreCase(locale.getCountry()))
         {
             // Search BaseLocale
             return this.translate0(new Locale(locale.getLanguage(), locale.getLanguage().toUpperCase()), singular, plural, n, false);

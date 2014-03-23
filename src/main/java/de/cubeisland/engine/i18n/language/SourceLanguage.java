@@ -138,9 +138,11 @@ public final class SourceLanguage extends NormalLanguage
             return null;
         }
 
+        private static final Locale[] noClones = new Locale[0];
+
         public Locale[] getClones()
         {
-            return null;
+            return noClones;
         }
 
         public int getPluralCount()
