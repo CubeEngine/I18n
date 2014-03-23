@@ -23,9 +23,12 @@
 package de.cubeisland.engine.i18n;
 
 import de.cubeisland.engine.i18n.language.ClonedLanguage;
+import de.cubeisland.engine.i18n.language.DefinitionLoadingException;
 import de.cubeisland.engine.i18n.language.Language;
+import de.cubeisland.engine.i18n.language.LanguageLoader;
 import de.cubeisland.engine.i18n.language.SourceLanguage;
 import de.cubeisland.engine.i18n.translation.TranslationLoader;
+import de.cubeisland.engine.i18n.translation.TranslationLoadingException;
 
 import java.util.Collection;
 import java.util.HashMap;

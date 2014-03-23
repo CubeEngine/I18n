@@ -22,8 +22,6 @@
  */
 package de.cubeisland.engine.i18n.translation;
 
-import de.cubeisland.engine.i18n.TranslationLoadingException;
-
 import java.util.Locale;
 
 public interface TranslationLoader

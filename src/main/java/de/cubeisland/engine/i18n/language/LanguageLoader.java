@@ -20,13 +20,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n;
+package de.cubeisland.engine.i18n.language;
 
-import de.cubeisland.engine.i18n.language.ClonedLanguage;
-import de.cubeisland.engine.i18n.language.Language;
-import de.cubeisland.engine.i18n.language.LanguageDefinition;
-import de.cubeisland.engine.i18n.language.NormalLanguage;
+import de.cubeisland.engine.i18n.I18nService;
 import de.cubeisland.engine.i18n.translation.TranslationContainer;
+import de.cubeisland.engine.i18n.translation.TranslationLoadingException;
 
 import java.util.Locale;
 

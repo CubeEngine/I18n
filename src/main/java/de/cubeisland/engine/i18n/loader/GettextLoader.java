@@ -22,7 +22,7 @@
  */
 package de.cubeisland.engine.i18n.loader;
 
-import de.cubeisland.engine.i18n.TranslationLoadingException;
+import de.cubeisland.engine.i18n.translation.TranslationLoadingException;
 import de.cubeisland.engine.i18n.translation.TranslationContainer;
 import de.cubeisland.engine.i18n.translation.TranslationLoader;
 import org.fedorahosted.tennera.jgettext.Catalog;
