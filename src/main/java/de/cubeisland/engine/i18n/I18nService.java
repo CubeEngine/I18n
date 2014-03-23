@@ -118,34 +118,34 @@ public class I18nService
 
     public String translate(Locale locale, String toTranslate)
     {
-        return this.translateN(locale, toTranslate, 0);
+        return this.translateN(locale, toTranslate, null, 0);
     }
 
-    public String translateN(String toTranslate, int n)
+    public String translateN(String singular, String plural, int n)
     {
-        return this.translateN(this.getDefaultLocale(), toTranslate, n);
+        return this.translateN(this.getDefaultLocale(), singular, plural, n);
     }
 
-    public String translateN(Locale locale, String toTranslate, int n)
+    public String translateN(Locale locale, String singular, String plural, int n)
     {
         try
         {
-            String translated = this.translate0(locale, toTranslate, n, true);
+            String translated = this.translate0(locale, singular, plural, n, true);
             if (translated == null || translated.length() == 0)
             {
                 // Fallback to Default
-                translated = this.translate0(this.getDefaultLocale(), toTranslate, n, false);
+                translated = this.translate0(this.getDefaultLocale(), singular, plural, n, false);
             }
             if (translated == null || translated.length() == 0)
             {
                 // Fallback to Source
                 if (n == 0)
                 {
-                    translated = this.getSourceLanguage().getTranslation(toTranslate);
+                    translated = this.getSourceLanguage().getTranslation(singular);
                 }
                 else
                 {
-                    translated = this.getSourceLanguage().getTranslation(toTranslate, n);
+                    translated = this.getSourceLanguage().getTranslation(plural, n);
                 }
             }
             return translated;
@@ -160,21 +160,21 @@ public class I18nService
         }
     }
 
-    private String translate0(Locale locale, String toTranslate, int n, boolean fallbackToBaseLocale) throws DefinitionLoadingException, TranslationLoadingException
+    private String translate0(Locale locale, String singular, String plural, int n, boolean fallbackToBaseLocale) throws DefinitionLoadingException, TranslationLoadingException
     {
         Language language = this.getLanguage(locale);
         if (language != null)
         {
             if (n == 0)
             {
-                return language.getTranslation(toTranslate);
+                return language.getTranslation(singular);
             }
-            return language.getTranslation(toTranslate, n);
+            return language.getTranslation(plural, n);
         }
         else if (fallbackToBaseLocale && !locale.getLanguage().toLowerCase().equals(locale.getCountry().toLowerCase()))
         {
             // Search BaseLocale
-            return this.translate0(new Locale(locale.getLanguage(), locale.getLanguage().toUpperCase()), toTranslate, n, false);
+            return this.translate0(new Locale(locale.getLanguage(), locale.getLanguage().toUpperCase()), singular, plural, n, false);
         }
         return null;
     }

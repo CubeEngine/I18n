@@ -22,7 +22,6 @@
  */
 package de.cubeisland.engine.i18n.language;
 
-import de.cubeisland.engine.i18n.plural.PluralExpr;
 import de.cubeisland.engine.i18n.translation.TranslationContainer;
 
 import java.util.Locale;
@@ -35,7 +34,6 @@ public class NormalLanguage implements Language
     private final Language parent;
     protected final TranslationContainer messages;
     protected final LanguageDefinition definition;
-    private PluralExpr pluralExpression;
 
     public NormalLanguage(LanguageDefinition definition, TranslationContainer messages, Language parent)
     {
