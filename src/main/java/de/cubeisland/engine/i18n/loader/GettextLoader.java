@@ -55,7 +55,7 @@ public class GettextLoader implements TranslationLoader
     public TranslationContainer loadTranslations(TranslationContainer container, Locale locale) throws TranslationLoadingException
     {
         Map<String, String> singularMessages = new HashMap<String, String>();
-        Map<String, List<String>> pluralMessages = new HashMap<String, List<String>>();
+        Map<String, String[]> pluralMessages = new HashMap<String, String[]>();
         Set<URL> loadFrom = new LinkedHashSet<URL>();
         for (URL poFile : poFiles)
         {
@@ -74,7 +74,7 @@ public class GettextLoader implements TranslationLoader
                 for (Message message : catalog)
                 {
                     singularMessages.put(message.getMsgid(), message.getMsgstr());
-                    pluralMessages.put(message.getMsgidPlural(), message.getMsgstrPlural());
+                    pluralMessages.put(message.getMsgidPlural(), message.getMsgstrPlural().toArray(new String[message.getMsgstrPlural().size()]));
                 }
             }
             container.merge(singularMessages, pluralMessages);

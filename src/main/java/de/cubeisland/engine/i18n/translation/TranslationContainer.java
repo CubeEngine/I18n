@@ -22,17 +22,15 @@
  */
 package de.cubeisland.engine.i18n.translation;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class TranslationContainer
 {
     private final Map<String, String> singularMessages;
-    private final Map<String, List<String>> pluralMessages;
+    private final Map<String, String[]> pluralMessages;
 
-    public TranslationContainer(Map<String, String> singularMessages, Map<String, List<String>> pluralMessages)
+    public TranslationContainer(Map<String, String> singularMessages, Map<String, String[]> pluralMessages)
     {
         this.singularMessages = singularMessages;
         this.pluralMessages = pluralMessages;
@@ -40,7 +38,7 @@ public class TranslationContainer
 
     public TranslationContainer()
     {
-        this(new HashMap<String, String>(), new HashMap<String, List<String>>());
+        this(new HashMap<String, String>(), new HashMap<String, String[]>());
     }
 
     public String getSingular(String message)
@@ -50,10 +48,10 @@ public class TranslationContainer
 
     public String getPlural(String message, int index)
     {
-        List<String> translations = this.pluralMessages.get(message);
+        String[] translations = this.pluralMessages.get(message);
         if (translations != null)
         {
-            String translation = translations.get(index);
+            String translation = translations[index];
             if (translation != null)
             {
                 return translation;
@@ -62,14 +60,14 @@ public class TranslationContainer
         return null;
     }
 
-    public void merge(Map<String, String> singularMessages, Map<String, List<String>> pluralMessages)
+    public void merge(Map<String, String> singularMessages, Map<String, String[]> pluralMessages)
     {
         singularMessages.keySet().removeAll(this.singularMessages.keySet());
         pluralMessages.keySet().removeAll(this.pluralMessages.keySet());
         this.putAll(singularMessages, pluralMessages);
     }
 
-    public void putAll(Map<String, String> singularMessages, Map<String, List<String>> pluralMessages)
+    public void putAll(Map<String, String> singularMessages, Map<String, String[]> pluralMessages)
     {
         this.singularMessages.putAll(singularMessages);
         this.pluralMessages.putAll(pluralMessages);
@@ -82,12 +80,12 @@ public class TranslationContainer
 
     public void putPlural(String plural, String result, int n, int maxN)
     {
-        List<String> list = this.pluralMessages.get(plural);
-        if (list == null)
+        String[] translations = this.pluralMessages.get(plural);
+        if (translations == null)
         {
-            list = new ArrayList<String>(maxN);
-            this.pluralMessages.put(plural, list);
+            translations = new String[maxN];
+            this.pluralMessages.put(plural, translations);
         }
-        list.add(n, result);
+        translations[n] = result;
     }
 }
