@@ -4,7 +4,7 @@
 
     <groupId>de.cubeisland.engine</groupId>
     <artifactId>i18n</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>I18n</name>
@@ -28,7 +28,7 @@
         <url>https://github.com/CubeEngineDev/I18n</url>
         <connection>scm:git:https://github.com/CubeEngineDev/I18n</connection>
         <developerConnection>scm:git:https://github.com/CubeEngineDev/I18n</developerConnection>
-        <tag>HEAD</tag>
+        <tag>i18n-1.0.1</tag>
     </scm>
 
     <distributionManagement>
