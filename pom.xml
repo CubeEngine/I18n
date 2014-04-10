@@ -61,6 +61,13 @@
                 <role>Contributor</role>
             </roles>
         </developer>
+        <developer>
+            <id>Faithcaio</id>
+            <name>Anselm Brehme</name>
+            <roles>
+                <role>Contributor</role>
+            </roles>
+        </developer>
     </developers>
 
     <properties>
