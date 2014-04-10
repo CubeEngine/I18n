@@ -77,7 +77,7 @@ public class I18nUtil
             return Locale.getDefault();
         }
 
-        localeString = localeString.replace('-', '_').replaceAll("[^a-z0-9_]", "");
+        localeString = localeString.replace('-', '_').replaceAll("[^a-zA-Z0-9_]", "");
         String[] parts = localeString.split("_", 2);
 
         String language = parts[0];
