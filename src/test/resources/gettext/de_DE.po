@@ -1,0 +1,42 @@
+# Hey this are test header comments.
+# you can use the velocity context in your comments.
+# for example: 8
+msgid ""
+msgstr ""
+"Project-Id-Version: Projektname\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Stefan Wolf <boeserwolf91@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"X-Generator: Poedit 1.6.4\n"
+"Language: de_DE\n"
+
+#. Extracted by:
+#. 1. Method
+#. Name: de.cubeisland.messageextractor.test.i18n.I18n#translateN(int, java.lang.String, java.lang.String, java.lang.Object[])
+#. Description: this message was extracted with the de.cubeisland.messageextractor.test.i18n.I18n#translateN method
+#: de/cubeisland/messageextractor/test/MessageExtractorTest.java:49
+msgid "One monkey is better than sheep"
+msgid_plural "We've %d monkeys"
+msgstr[0] "Ein Affe ist besser als ein Schaf"
+msgstr[1] "Wir haben %d Affen"
+
+#. Extracted by:
+#. 1. Method
+#. Name: de.cubeisland.messageextractor.test.i18n.I18n#translate(java.lang.String, java.lang.Object[])
+#. Description: this message was extracted with the de.cubeisland.messageextractor.test.i18n.I18n#translate method
+#: de/cubeisland/messageextractor/test/StringTest.java:41
+msgid "no"
+msgstr "nein"
+
+#. Extracted by:
+#. 1. Method
+#. Name: de.cubeisland.messageextractor.test.i18n.I18n#translate(java.lang.String, java.lang.Object[])
+#. Description: this message was extracted with the de.cubeisland.messageextractor.test.i18n.I18n#translate method
+#: de/cubeisland/messageextractor/test/StringTest.java:41
+msgid "yes"
+msgstr "ja"
