@@ -23,6 +23,7 @@
 package de.cubeisland.engine.i18n.language;
 
 import de.cubeisland.engine.i18n.translation.TranslationContainer;
+import de.cubeisland.engine.i18n.translation.TranslationLoadingException;
 
 import java.util.Locale;
 
@@ -70,21 +71,23 @@ public interface Language
     /**
      * Gets a singular translation from this language
      *
+     * @param context  the context of the message
      * @param singular the message
      *
      * @return the translation or null
      */
-    String getTranslation(String singular);
+    String getTranslation(String context, String singular) throws TranslationLoadingException;
 
     /**
      * Gets a plural translation from this language based on the amount
      *
-     * @param plural the message in plural form
-     * @param n      the amount
+     * @param context  the context of the message
+     * @param singular the message
+     * @param n        the amount
      *
      * @return the translated message or null
      */
-    String getTranslation(String plural, int n);
+    String getTranslation(String context, String singular, String plural, int n) throws TranslationLoadingException;
 
     /**
      * Returns a map of all translations of the given category

@@ -116,39 +116,64 @@ public class I18nService
 
     public String translate(String toTranslate)
     {
-        return this.translate(this.getDefaultLocale(), toTranslate);
+        return this.translate((String)null, toTranslate);
     }
 
     public String translate(Locale locale, String toTranslate)
     {
-        return this.translateN(locale, toTranslate, null, 0);
+        return this.translate(locale, null, toTranslate);
+    }
+
+    public String translate(String context, String toTranslate)
+    {
+        return this.translate(this.getDefaultLocale(), context, toTranslate);
+    }
+
+    public String translate(Locale locale, String context, String toTranslate)
+    {
+        return this.translate0(locale, context, toTranslate, null, 0, false);
     }
 
     public String translateN(String singular, String plural, int n)
     {
-        return this.translateN(this.getDefaultLocale(), singular, plural, n);
+        return this.translateN((String)null, singular, plural, n);
+    }
+
+    public String translateN(String context, String singular, String plural, int n)
+    {
+        return this.translateN(this.getDefaultLocale(), context, singular, plural, n);
     }
 
     public String translateN(Locale locale, String singular, String plural, int n)
     {
+        return this.translateN(locale, null, singular, plural, n);
+    }
+
+    public String translateN(Locale locale, String context, String singular, String plural, int n)
+    {
+        return this.translate0(locale, context, singular, plural, n, true);
+    }
+
+    private String translate0(Locale locale, String context, String singular, String plural, int n, boolean isPlural)
+    {
         try
         {
-            String translated = this.translate0(locale, singular, plural, n, true);
+            String translated = this.translate0(locale, context, singular, plural, n, isPlural, true);
             if (translated == null || translated.length() == 0)
             {
                 // Fallback to Default
-                translated = this.translate0(this.getDefaultLocale(), singular, plural, n, false);
+                translated = this.translate0(this.getDefaultLocale(), context, singular, plural, n, isPlural, false);
             }
             if (translated == null || translated.length() == 0)
             {
                 // Fallback to Source
-                if (n == 0)
+                if (isPlural)
                 {
-                    translated = this.getSourceLanguage().getTranslation(singular);
+                    translated = this.getSourceLanguage().getTranslation(context, singular, plural, n);
                 }
                 else
                 {
-                    translated = this.getSourceLanguage().getTranslation(plural, n);
+                    translated = this.getSourceLanguage().getTranslation(context, singular);
                 }
             }
             return translated;
@@ -163,21 +188,21 @@ public class I18nService
         }
     }
 
-    private String translate0(Locale locale, String singular, String plural, int n, boolean fallbackToBaseLocale) throws DefinitionLoadingException, TranslationLoadingException
+    private String translate0(Locale locale, String context, String singular, String plural, int n, boolean isPlural, boolean fallbackToBaseLocale) throws DefinitionLoadingException, TranslationLoadingException
     {
         Language language = this.getLanguage(locale);
         if (language != null)
         {
-            if (n == 0)
+            if (isPlural)
             {
-                return language.getTranslation(singular);
+                return language.getTranslation(context, singular, plural, n);
             }
-            return language.getTranslation(plural, n);
+            return language.getTranslation(context, singular);
         }
         else if (fallbackToBaseLocale && !locale.getLanguage().equalsIgnoreCase(locale.getCountry()))
         {
             // Search BaseLocale
-            return this.translate0(new Locale(locale.getLanguage(), locale.getLanguage().toUpperCase()), singular, plural, n, false);
+            return this.translate0(new Locale(locale.getLanguage(), locale.getLanguage().toUpperCase()), context, singular, plural, n, isPlural, false);
         }
         return null;
     }

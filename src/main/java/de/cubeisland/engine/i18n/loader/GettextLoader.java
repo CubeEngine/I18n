@@ -22,6 +22,9 @@
  */
 package de.cubeisland.engine.i18n.loader;
 
+import de.cubeisland.engine.i18n.translation.PluralTranslation;
+import de.cubeisland.engine.i18n.translation.SingularTranslation;
+import de.cubeisland.engine.i18n.translation.Translation;
 import de.cubeisland.engine.i18n.translation.TranslationContainer;
 import de.cubeisland.engine.i18n.translation.TranslationLoader;
 import de.cubeisland.engine.i18n.translation.TranslationLoadingException;
@@ -32,11 +35,9 @@ import org.fedorahosted.tennera.jgettext.PoParser;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 public class GettextLoader implements TranslationLoader
@@ -54,30 +55,38 @@ public class GettextLoader implements TranslationLoader
 
     public TranslationContainer loadTranslations(TranslationContainer container, Locale locale) throws TranslationLoadingException
     {
-        Map<String, String> singularMessages = new HashMap<String, String>();
-        Map<String, String[]> pluralMessages = new HashMap<String, String[]>();
         Set<URL> loadFrom = new LinkedHashSet<URL>();
         for (URL poFile : poFiles)
         {
             String fileName = poFile.toString();
-            if (fileName.endsWith(locale.getLanguage().toLowerCase() + "_" + locale.getCountry().toUpperCase() + ".po")
-                    || fileName.endsWith(locale.getLanguage().toLowerCase() + ".po"))
+            if (fileName.endsWith(locale.getLanguage().toLowerCase() + "_" + locale.getCountry().toUpperCase() + ".po") || fileName.endsWith(locale.getLanguage().toLowerCase() + ".po"))
             {
                 loadFrom.add(poFile);
             }
         }
+
         for (URL url : loadFrom)
         {
             Catalog catalog = this.parseCatalog(url);
-            if (catalog != null)
+            if (catalog == null)
             {
-                for (Message message : catalog)
-                {
-                    singularMessages.put(message.getMsgid(), message.getMsgstr());
-                    pluralMessages.put(message.getMsgidPlural(), message.getMsgstrPlural().toArray(new String[message.getMsgstrPlural().size()]));
-                }
+                continue;
             }
-            container.merge(singularMessages, pluralMessages);
+
+            for (Message message : catalog)
+            {
+                Translation translation;
+                if (message.isPlural())
+                {
+                    String[] translations = message.getMsgstrPlural().toArray(new String[message.getMsgstrPlural().size()]);
+                    translation = new PluralTranslation(message.getMsgctxt(), message.getMsgid(), message.getMsgidPlural(), translations);
+                }
+                else
+                {
+                    translation = new SingularTranslation(message.getMsgctxt(), message.getMsgid(), message.getMsgstr());
+                }
+                container.addTranslation(translation);
+            }
         }
         return container;
     }

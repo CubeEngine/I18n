@@ -23,6 +23,7 @@
 package de.cubeisland.engine.i18n.language;
 
 import de.cubeisland.engine.i18n.translation.TranslationContainer;
+import de.cubeisland.engine.i18n.translation.TranslationLoadingException;
 
 import java.util.Locale;
 
@@ -52,7 +53,6 @@ public class NormalLanguage implements Language
         this.definition = definition;
         this.parent = parent;
         this.messages = messages;
-
     }
 
     public Locale getLocale()
@@ -75,23 +75,23 @@ public class NormalLanguage implements Language
         return this.definition;
     }
 
-    public String getTranslation(String singular)
+    public String getTranslation(String context, String singular) throws TranslationLoadingException
     {
-        String translation = this.messages.getSingular(singular);
+        String translation = this.messages.getTranslation(context, singular, null, 0);
         if (translation == null && parent != null)
         {
-            translation = this.parent.getTranslation(singular);
+            translation = this.parent.getTranslation(context, singular);
         }
         return translation;
     }
 
-    public String getTranslation(String plural, int n)
+    public String getTranslation(String context, String singular, String plural, int n) throws TranslationLoadingException
     {
         int index = this.getIndex(n);
-        String translation = this.messages.getPlural(plural, index);
+        String translation = this.messages.getTranslation(context, singular, plural, index);
         if (translation == null && parent != null)
         {
-            translation = this.parent.getTranslation(plural, n);
+            return this.parent.getTranslation(context, singular, plural, n);
         }
         return translation;
     }

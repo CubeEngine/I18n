@@ -22,37 +22,45 @@
  */
 package de.cubeisland.engine.i18n.translation;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TranslationContainer
 {
-    private final Map<String, String> singularMessages;
-    private final Map<String, String[]> pluralMessages;
-
-    public TranslationContainer(Map<String, String> singularMessages, Map<String, String[]> pluralMessages)
-    {
-        this.singularMessages = singularMessages;
-        this.pluralMessages = pluralMessages;
-    }
+    private final List<Translation> translations;
 
     public TranslationContainer()
     {
-        this(new HashMap<String, String>(), new HashMap<String, String[]>());
+        this.translations = new ArrayList<Translation>();
     }
 
-    public String getSingular(String message)
+    public Translation addTranslation(Translation translation)
     {
-        return this.singularMessages.get(message);
-    }
-
-    public String getPlural(String message, int index)
-    {
-        String[] translations = this.pluralMessages.get(message);
-        if (translations != null)
+        // load index of available translation
+        int index = this.translations.indexOf(translation);
+        if (index < 0)
         {
-            String translation = translations[index];
-            if (translation != null)
+            // add completely new translation
+            this.translations.add(translation);
+            return null;
+        }
+
+        // override old translation and return it
+        Translation old = this.translations.get(index);
+        this.translations.set(index, translation);
+        return old;
+    }
+
+    private Translation getTranslation0(String context, String singular)
+    {
+        for (Translation translation : this.translations)
+        {
+            if (context == null && translation.hasContext() || context != null && !context.equals(translation.getContext()))
+            {
+                continue;
+            }
+
+            if (singular.equals(translation.getSingularId()))
             {
                 return translation;
             }
@@ -60,32 +68,40 @@ public class TranslationContainer
         return null;
     }
 
-    public void merge(Map<String, String> singularMessages, Map<String, String[]> pluralMessages)
+    public String getTranslation(String context, String singular, String plural, int n) throws TranslationLoadingException
     {
-        singularMessages.keySet().removeAll(this.singularMessages.keySet());
-        pluralMessages.keySet().removeAll(this.pluralMessages.keySet());
-        this.putAll(singularMessages, pluralMessages);
-    }
-
-    public void putAll(Map<String, String> singularMessages, Map<String, String[]> pluralMessages)
-    {
-        this.singularMessages.putAll(singularMessages);
-        this.pluralMessages.putAll(pluralMessages);
-    }
-
-    public void putSingular(String singular, String result)
-    {
-        this.singularMessages.put(singular, result);
-    }
-
-    public void putPlural(String plural, String result, int n, int maxN)
-    {
-        String[] translations = this.pluralMessages.get(plural);
-        if (translations == null)
+        Translation translation = this.getTranslation0(context, singular);
+        if (translation == null)
         {
-            translations = new String[maxN];
-            this.pluralMessages.put(plural, translations);
+            return null;
         }
-        translations[n] = result;
+
+        if (translation.isPluralTranslation() && !translation.getPluralId().equals(plural))
+        {
+            throw new TranslationLoadingException("The specified pluralId is different to the pluralId of the loaded translation.");
+        }
+
+        return translation.getTranslation(n);
+    }
+
+    public void putTranslation(String context, String singular, String plural, String translation, int n, int maxN) throws TranslationLoadingException
+    {
+        Translation trans = this.getTranslation0(context, singular);
+
+        if (trans != null)
+        {
+            trans.setTranslation(translation, n);
+            return;
+        }
+
+        if (plural == null && n == 0)
+        {
+            this.addTranslation(new SingularTranslation(context, singular, translation));
+            return;
+        }
+
+        Translation pluralTranslation = new PluralTranslation(context, singular, plural, new String[maxN]);
+        pluralTranslation.setTranslation(translation, n);
+        this.addTranslation(pluralTranslation);
     }
 }

@@ -23,6 +23,7 @@
 package de.cubeisland.engine.i18n.language;
 
 import de.cubeisland.engine.i18n.translation.TranslationContainer;
+import de.cubeisland.engine.i18n.translation.TranslationLoadingException;
 
 import java.util.Locale;
 
@@ -74,14 +75,14 @@ public class ClonedLanguage implements Language
         return this.original.getLanguageDefinition();
     }
 
-    public String getTranslation(String singular)
+    public String getTranslation(String context, String singular) throws TranslationLoadingException
     {
-        return this.original.getTranslation(singular);
+        return this.original.getTranslation(context, singular);
     }
 
-    public String getTranslation(String plural, int n)
+    public String getTranslation(String context, String singular, String plural, int n) throws TranslationLoadingException
     {
-        return this.original.getTranslation(plural, n);
+        return this.original.getTranslation(context, singular, plural, n);
     }
 
     public TranslationContainer getMessages()

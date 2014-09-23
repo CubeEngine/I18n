@@ -25,6 +25,7 @@ package de.cubeisland.engine.i18n.language;
 import de.cubeisland.engine.i18n.plural.NotOneExpr;
 import de.cubeisland.engine.i18n.plural.PluralExpr;
 import de.cubeisland.engine.i18n.translation.TranslationContainer;
+import de.cubeisland.engine.i18n.translation.TranslationLoadingException;
 
 import java.util.Locale;
 
@@ -45,27 +46,28 @@ public final class SourceLanguage extends NormalLanguage
         super(new SourceLanguageDefinition(locale, name, localName, pluralCount, pluralExpression), new TranslationContainer(), null);
     }
 
-    public String getTranslation(String singular)
+    public String getTranslation(String context, String singular) throws TranslationLoadingException
     {
         // TODO preprocessor
-        String result = this.messages.getSingular(singular);
+        String result = this.messages.getTranslation(context, singular, null, 0);
         if (result == null)
         {
             result = singular;
-            this.messages.putSingular(singular, result);
+            this.messages.putTranslation(context, singular, null, result, 0, 1);
         }
         return result;
     }
 
-    public String getTranslation(String plural, int n)
+    public String getTranslation(String context, String singular, String plural, int n) throws TranslationLoadingException
     {
         // TODO preprocessor
         int index = this.getIndex(n);
-        String result = this.messages.getPlural(plural, index);
+
+        String result = this.messages.getTranslation(context, singular, plural, index);
         if (result == null)
         {
-            result = plural;
-            this.messages.putPlural(plural, result, index, this.definition.getPluralCount());
+            result = index == 0 ? singular : plural;
+            this.messages.putTranslation(context, singular, plural, result, index, this.definition.getPluralCount());
         }
         return result;
     }
