@@ -48,19 +48,32 @@ public class GettextTest
         GettextLoader gettextLoader = new GettextLoader(Charset.forName("UTF-8"), poFiles);
         I18nService service = new I18nService(SourceLanguage.EN_US, gettextLoader, new I18nLanguageLoader(), Locale.US);
 
-        assertEquals("ja", service.translate(Locale.GERMAN, "yes"));
-        assertEquals("nein", service.translate(Locale.GERMAN, "no"));
-        assertEquals("Wir haben %d Affen", service.translateN(Locale.GERMAN, "One monkey is better than sheep", "We've %d monkeys", 0));
-        assertEquals("Ein Affe ist besser als ein Schaf", service.translateN(Locale.GERMAN, "One monkey is better than sheep", "We've %d monkeys", 1));
-        assertEquals("Wir haben %d Affen", service.translateN(Locale.GERMAN, "One monkey is better than sheep", "We've %d monkeys", 2));
-        assertEquals("Wir haben %d Affen", service.translateN(Locale.GERMAN, "One monkey is better than sheep", "We've %d monkeys", 23));
+        // singular message tests
+        assertEquals("yes", service.translate(Locale.GERMAN, "answer", "yes")); // message does not exist with context!
+        assertEquals("yes", service.translate(Locale.US, "yes")); // SourceLanguage locale
+        assertEquals("yes", service.translate(Locale.US, "answer", "yes")); // SourceLanguage locale
+        assertEquals("yes", service.translate("yes")); // without locale specification
+        assertEquals("yes", service.translate(Locale.FRENCH, "yes")); // locale which doesn't have translations
+        assertEquals("ja", service.translate(Locale.GERMAN, "yes")); // locale which doesn't have translations but which is related to de_DE
+        assertEquals("ja", service.translate(Locale.GERMANY, "yes")); // locale has translations
 
-        assertEquals("yes", service.translate(Locale.US, "yes"));
-        assertEquals("yes", service.translate(Locale.FRENCH, "yes"));
-        assertEquals("no", service.translate(Locale.US, "no"));
-        assertEquals("no", service.translate(Locale.FRENCH, "no"));
+        assertEquals("no", service.translate(Locale.GERMANY, "no")); // message doesn't exist without context
+        assertEquals("nein", service.translate(Locale.GERMANY, "answer", "no")); // translation exists
+        assertEquals("no", service.translate("no"));
+        assertEquals("no", service.translate("answer", "no"));
+
+        // plural message tests
+        assertEquals("Wir haben %d Affen", service.translateN(Locale.GERMAN, "One monkey is better than sheep", "We've %d monkeys", 0));
+        assertEquals("Wir haben %d Affen", service.translateN(Locale.GERMANY, "One monkey is better than sheep", "We've %d monkeys", 0));
+        assertEquals("Ein Affe ist besser als ein Schaf", service.translateN(Locale.GERMAN, "One monkey is better than sheep", "We've %d monkeys", 1));
+        assertEquals("Ein Affe ist besser als ein Schaf", service.translateN(Locale.GERMANY, "One monkey is better than sheep", "We've %d monkeys", 1));
+        assertEquals("Wir haben %d Affen", service.translateN(Locale.GERMANY, "One monkey is better than sheep", "We've %d monkeys", 2));
+        assertEquals("Wir haben %d Affen", service.translateN(Locale.GERMANY, "One monkey is better than sheep", "We've %d monkeys", 23));
         assertEquals("We've %d monkeys", service.translateN(Locale.US, "One monkey is better than sheep", "We've %d monkeys", 0));
+        assertEquals("We've %d monkeys", service.translateN("One monkey is better than sheep", "We've %d monkeys", 0));
         assertEquals("One monkey is better than sheep", service.translateN(Locale.US, "One monkey is better than sheep", "We've %d monkeys", 1));
+        assertEquals("One monkey is better than sheep", service.translateN("One monkey is better than sheep", "We've %d monkeys", 1));
         assertEquals("We've %d monkeys", service.translateN(Locale.US, "One monkey is better than sheep", "We've %d monkeys", 2));
+        assertEquals("We've %d monkeys", service.translateN("One monkey is better than sheep", "We've %d monkeys", 2));
     }
 }

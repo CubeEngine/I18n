@@ -30,6 +30,7 @@ msgstr[1] ""
 #. 	Name: de.cubeisland.messageextractor.test.i18n.I18n#translate(java.lang.String, java.lang.Object[])
 #. 	Description: this message was extracted with the de.cubeisland.messageextractor.test.i18n.I18n#translate method
 #: de/cubeisland/messageextractor/test/StringTest.java:41
+msgctxt "answer"
 msgid "no"
 msgstr "no"
 
