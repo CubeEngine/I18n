@@ -1,6 +1,6 @@
 /**
  * The MIT License
- * Copyright (c) ${project.inceptionYear} Cube Island
+ * Copyright (c) 2013 Cube Island
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

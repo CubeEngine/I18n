@@ -16,6 +16,7 @@
     <name>I18n</name>
     <description>A I18n library for Java</description>
     <url>http://cubeisland.de/engine</url>
+    <inceptionYear>2013</inceptionYear>
 
     <licenses>
         <license>
