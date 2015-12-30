@@ -48,7 +48,7 @@ public class I18nService
     {
         public String translate(Language input, int n, String singular, String plural)
         {
-            return input.getTranslation(plural);
+            return input.getTranslation(singular);
         }
     };
     private I18nService.TranslateFunction translatePlural = new I18nService.TranslateFunction()
