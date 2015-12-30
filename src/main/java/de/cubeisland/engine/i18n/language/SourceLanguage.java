@@ -47,27 +47,31 @@ public final class SourceLanguage extends NormalLanguage
 
     public String getTranslation(String singular)
     {
-        // TODO preprocessor
-        String result = this.messages.getSingular(singular);
-        if (result == null)
+        String translation = super.getTranslation(singular);
+        if (translation == null)
         {
-            result = singular;
-            this.messages.putSingular(singular, result);
+            translation = singular;
+            // TODO preprocessor
+            messages.putSingular(singular, translation);
         }
-        return result;
+        return translation;
     }
 
-    public String getTranslation(String plural, int n)
+    public String getTranslation(String singular, String plural, int n)
     {
-        // TODO preprocessor
-        int index = this.getIndex(n);
-        String result = this.messages.getPlural(plural, index);
-        if (result == null)
+        int index = getIndex(n);
+        if (index == 0)
         {
-            result = plural;
-            this.messages.putPlural(plural, result, index, this.definition.getPluralCount());
+            return getTranslation(singular);
         }
-        return result;
+        String translation = super.getTranslation(singular, plural, n);
+        if (translation == null)
+        {
+            translation = plural;
+            // TODO preprocessor
+            messages.putPlural(plural, translation, index - 1, this.definition.getPluralCount());
+        }
+        return translation;
     }
 
     public TranslationContainer getMessages()

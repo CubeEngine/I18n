@@ -79,9 +79,9 @@ public class ClonedLanguage implements Language
         return this.original.getTranslation(singular);
     }
 
-    public String getTranslation(String plural, int n)
+    public String getTranslation(String singular, String plural, int n)
     {
-        return this.original.getTranslation(plural, n);
+        return this.original.getTranslation(singular, plural, n);
     }
 
     public TranslationContainer getMessages()

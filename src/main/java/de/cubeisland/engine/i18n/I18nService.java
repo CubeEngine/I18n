@@ -44,6 +44,21 @@ public class I18nService
 
     private final Map<Locale, Language> languages = new HashMap<Locale, Language>();
 
+    private I18nService.TranslateFunction translateSingle = new I18nService.TranslateFunction()
+    {
+        public String translate(Language input, int n, String singular, String plural)
+        {
+            return input.getTranslation(plural);
+        }
+    };
+    private I18nService.TranslateFunction translatePlural = new I18nService.TranslateFunction()
+    {
+        public String translate(Language input, int n, String singular, String plural)
+        {
+            return input.getTranslation(singular, plural, n);
+        }
+    };
+
     public I18nService(SourceLanguage source, TranslationLoader tLoader, LanguageLoader lLoader, Locale defaultLocale)
     {
         this.sourceLanguage = source;
@@ -121,7 +136,7 @@ public class I18nService
 
     public String translate(Locale locale, String toTranslate)
     {
-        return this.translateN(locale, toTranslate, null, 0);
+        return translate0(locale, -1, toTranslate, null, translateSingle);
     }
 
     public String translateN(String singular, String plural, int n)
@@ -131,27 +146,47 @@ public class I18nService
 
     public String translateN(Locale locale, String singular, String plural, int n)
     {
+        return this.translate0(locale, n, singular, plural, translatePlural);
+    }
+
+    private String translate0(Locale locale, int n, String singular, String plural, TranslateFunction func)
+    {
         try
         {
-            String translated = this.translate0(locale, singular, plural, n, true);
-            if (translated == null || translated.length() == 0)
+            // Check actual Locale
+            Language language = this.getLanguage(locale);
+            if (language != null)
             {
-                // Fallback to Default
-                translated = this.translate0(this.getDefaultLocale(), singular, plural, n, false);
-            }
-            if (translated == null || translated.length() == 0)
-            {
-                // Fallback to Source
-                if (n == 0)
+                String translated = func.translate(language, n, singular, plural);
+                if (translated != null)
                 {
-                    translated = this.getSourceLanguage().getTranslation(singular);
-                }
-                else
-                {
-                    translated = this.getSourceLanguage().getTranslation(plural, n);
+                    return translated;
                 }
             }
-            return translated;
+
+            // Check for Base-Locale
+            if (!locale.getLanguage().toUpperCase().equals(locale.getCountry()))
+            {
+                Locale baseLocale = new Locale(locale.getLanguage(), locale.getLanguage().toUpperCase());
+                String tranlated = translate0(baseLocale, n, singular, plural, func);
+                if (tranlated != null)
+                {
+                    return tranlated;
+                }
+            }
+
+            // Check for Default-Locale
+            if (locale != getDefaultLocale())
+            {
+                String tranlated = translate0(getDefaultLocale(), n, singular, plural, func);
+                if (tranlated != null)
+                {
+                    return tranlated;
+                }
+            }
+
+            // Fall back to source-language
+            return func.translate(getSourceLanguage(), n, singular, plural);
         }
         catch (DefinitionLoadingException e)
         {
@@ -163,22 +198,8 @@ public class I18nService
         }
     }
 
-    private String translate0(Locale locale, String singular, String plural, int n, boolean fallbackToBaseLocale) throws DefinitionLoadingException, TranslationLoadingException
+    private interface TranslateFunction
     {
-        Language language = this.getLanguage(locale);
-        if (language != null)
-        {
-            if (n == 0)
-            {
-                return language.getTranslation(singular);
-            }
-            return language.getTranslation(plural, n);
-        }
-        else if (fallbackToBaseLocale && !locale.getLanguage().equalsIgnoreCase(locale.getCountry()))
-        {
-            // Search BaseLocale
-            return this.translate0(new Locale(locale.getLanguage(), locale.getLanguage().toUpperCase()), singular, plural, n, false);
-        }
-        return null;
+        String translate(Language input, int n, String singular, String plural);
     }
 }

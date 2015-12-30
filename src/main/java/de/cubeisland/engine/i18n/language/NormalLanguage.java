@@ -85,13 +85,17 @@ public class NormalLanguage implements Language
         return translation;
     }
 
-    public String getTranslation(String plural, int n)
+    public String getTranslation(String singular, String plural, int n)
     {
         int index = this.getIndex(n);
-        String translation = this.messages.getPlural(plural, index);
+        if (index == 0)
+        {
+            return getTranslation(singular);
+        }
+        String translation = this.messages.getPlural(plural, index - 1);
         if (translation == null && parent != null)
         {
-            translation = this.parent.getTranslation(plural, n);
+            translation = this.parent.getTranslation(singular, plural, n);
         }
         return translation;
     }

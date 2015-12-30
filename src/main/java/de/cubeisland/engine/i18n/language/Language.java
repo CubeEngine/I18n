@@ -77,14 +77,15 @@ public interface Language
     String getTranslation(String singular);
 
     /**
-     * Gets a plural translation from this language based on the amount
+     * Gets a plural translation from this language based on the amount or singular translation if the {@link de.cubeisland.engine.i18n.plural.PluralExpr} returns 0
      *
+     * @param singular the message in singular form
      * @param plural the message in plural form
      * @param n      the amount
      *
      * @return the translated message or null
      */
-    String getTranslation(String plural, int n);
+    String getTranslation(String singular, String plural, int n);
 
     /**
      * Returns a map of all translations of the given category
