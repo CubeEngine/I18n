@@ -50,6 +50,9 @@
         <option name="HTML_ATTRIBUTE_WRAP" value="0" />
         <option name="HTML_KEEP_BLANK_LINES" value="1" />
         <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="" />
+        <MultiMarkdownCodeStyleSettings>
+          <option name="RIGHT_MARGIN" value="72" />
+        </MultiMarkdownCodeStyleSettings>
         <XML>
           <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
         </XML>

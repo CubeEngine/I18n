@@ -20,25 +20,62 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n;
+package org.cubeengine.linguist.language;
 
 import java.util.Locale;
-import org.cubeengine.linguist.language.GermanyLanguageDefinition;
-import org.cubeengine.linguist.language.LanguageDefinition;
-import org.cubeengine.linguist.loader.DefinitionLoadingException;
-import org.cubeengine.linguist.loader.LanguageLoader;
+import org.cubeengine.linguist.plural.PluralExpr;
 
-public class I18nLanguageLoader extends LanguageLoader
+/**
+ * This configuration is used to parse the language configurations.
+ */
+public interface LanguageDefinition
 {
-    private final GermanyLanguageDefinition germanyLanguageDefinition = new GermanyLanguageDefinition();
+    /**
+     * Returns the {@link Locale} of the language.
+     *
+     * @return {@link Locale}
+     */
+    Locale getLocale();
 
-    @Override
-    public LanguageDefinition loadDefinition(final Locale locale) throws DefinitionLoadingException
-    {
-        if (Locale.GERMANY.equals(locale))
-        {
-            return germanyLanguageDefinition;
-        }
-        return null;
-    }
+    /**
+     * Returns the name of the language in english.
+     *
+     * @return name in english
+     */
+    String getName();
+
+    /**
+     * Returns the name in the locale language.
+     *
+     * @return name in locale language
+     */
+    String getLocalName();
+
+    /**
+     * Returns the parent {@link Locale} of this language.
+     *
+     * @return parent
+     */
+    Locale getParent();
+
+    /**
+     * Returns an array of {@link Locale}s defining cloned languages.
+     *
+     * @return clones
+     */
+    Locale[] getClones();
+
+    /**
+     * Returns the plural count of this language.
+     *
+     * @return plural count
+     */
+    int getPluralCount();
+
+    /**
+     * Returns the plural expression.
+     *
+     * @return plural expression
+     */
+    PluralExpr getPluralExpression();
 }

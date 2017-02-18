@@ -22,8 +22,8 @@
  */
 package de.cubeisland.engine.i18n;
 
-import de.cubeisland.engine.i18n.language.SourceLanguage;
-import de.cubeisland.engine.i18n.loader.GettextLoader;
+import org.cubeengine.linguist.language.SourceLanguage;
+import org.cubeengine.linguist.loader.GettextLoader;
 import org.junit.Test;
 
 import java.io.File;

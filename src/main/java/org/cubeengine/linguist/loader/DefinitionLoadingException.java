@@ -20,25 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n;
+package org.cubeengine.linguist.loader;
 
-import java.util.Locale;
-import org.cubeengine.linguist.language.GermanyLanguageDefinition;
-import org.cubeengine.linguist.language.LanguageDefinition;
-import org.cubeengine.linguist.loader.DefinitionLoadingException;
-import org.cubeengine.linguist.loader.LanguageLoader;
-
-public class I18nLanguageLoader extends LanguageLoader
+public class DefinitionLoadingException extends Exception
 {
-    private final GermanyLanguageDefinition germanyLanguageDefinition = new GermanyLanguageDefinition();
+    private static final long serialVersionUID = -7634304679463305161L;
 
-    @Override
-    public LanguageDefinition loadDefinition(final Locale locale) throws DefinitionLoadingException
+    public DefinitionLoadingException(final String message)
     {
-        if (Locale.GERMANY.equals(locale))
-        {
-            return germanyLanguageDefinition;
-        }
-        return null;
+        super(message);
+    }
+
+    public DefinitionLoadingException(final String message, final Throwable cause)
+    {
+        super(message, cause);
     }
 }

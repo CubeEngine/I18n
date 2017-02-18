@@ -20,25 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n;
+package org.cubeengine.linguist.plural;
 
-import java.util.Locale;
-import org.cubeengine.linguist.language.GermanyLanguageDefinition;
-import org.cubeengine.linguist.language.LanguageDefinition;
-import org.cubeengine.linguist.loader.DefinitionLoadingException;
-import org.cubeengine.linguist.loader.LanguageLoader;
+import org.junit.Test;
 
-public class I18nLanguageLoader extends LanguageLoader
+import static org.junit.Assert.*;
+
+/**
+ * Tests the {@link ZeroExpr}.
+ */
+public class ZeroExprTest
 {
-    private final GermanyLanguageDefinition germanyLanguageDefinition = new GermanyLanguageDefinition();
+    private final ZeroExpr zeroExpr = new ZeroExpr();
 
-    @Override
-    public LanguageDefinition loadDefinition(final Locale locale) throws DefinitionLoadingException
+    @Test
+    public void evaluate() throws Exception
     {
-        if (Locale.GERMANY.equals(locale))
-        {
-            return germanyLanguageDefinition;
-        }
-        return null;
+        assertEquals(0, this.zeroExpr.evaluate(0));
+        assertEquals(0, this.zeroExpr.evaluate(1));
+        assertEquals(0, this.zeroExpr.evaluate(2));
+        assertEquals(0, this.zeroExpr.evaluate(3));
+        assertEquals(0, this.zeroExpr.evaluate(4));
+        assertEquals(0, this.zeroExpr.evaluate(5));
+        assertEquals(0, this.zeroExpr.evaluate(100));
+        assertEquals(0, this.zeroExpr.evaluate(4432));
     }
 }

@@ -20,25 +20,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n;
+package org.cubeengine.linguist.translation;
 
-import java.util.Locale;
-import org.cubeengine.linguist.language.GermanyLanguageDefinition;
-import org.cubeengine.linguist.language.LanguageDefinition;
-import org.cubeengine.linguist.loader.DefinitionLoadingException;
-import org.cubeengine.linguist.loader.LanguageLoader;
+import org.cubeengine.linguist.LinguistException;
 
-public class I18nLanguageLoader extends LanguageLoader
+/**
+ * A linguist exception gets thrown if an error occurs while accassing a {@link Translation}
+ */
+public class TranslationException extends LinguistException
 {
-    private final GermanyLanguageDefinition germanyLanguageDefinition = new GermanyLanguageDefinition();
+    private static final long serialVersionUID = -7354063083383857065L;
 
-    @Override
-    public LanguageDefinition loadDefinition(final Locale locale) throws DefinitionLoadingException
+    /**
+     * Constructor.
+     * @param msg The error message.
+     */
+    public TranslationException(final String msg)
     {
-        if (Locale.GERMANY.equals(locale))
-        {
-            return germanyLanguageDefinition;
-        }
-        return null;
+        super(msg);
+    }
+
+    /**
+     * Constructor.
+     * @param msg The error message.
+     * @param cause The error cause.
+     */
+    public TranslationException(final String msg, final Throwable cause)
+    {
+        super(msg, cause);
     }
 }

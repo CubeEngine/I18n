@@ -20,25 +20,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n;
+package org.cubeengine.linguist.plural;
 
-import java.util.Locale;
-import org.cubeengine.linguist.language.GermanyLanguageDefinition;
-import org.cubeengine.linguist.language.LanguageDefinition;
-import org.cubeengine.linguist.loader.DefinitionLoadingException;
-import org.cubeengine.linguist.loader.LanguageLoader;
-
-public class I18nLanguageLoader extends LanguageLoader
+/**
+ * Describes an expression indicating which plural message must be used.
+ */
+public interface PluralExpr
 {
-    private final GermanyLanguageDefinition germanyLanguageDefinition = new GermanyLanguageDefinition();
-
-    @Override
-    public LanguageDefinition loadDefinition(final Locale locale) throws DefinitionLoadingException
-    {
-        if (Locale.GERMANY.equals(locale))
-        {
-            return germanyLanguageDefinition;
-        }
-        return null;
-    }
+    /**
+     * Evaluates the specified number and returns the index of the
+     * plural message which must be used.
+     *
+     * @param n The count of the element defining the plural message index.
+     *
+     * @return the plural message index.
+     */
+    int evaluate(int n) throws PluralExpressionEvaluationException;
 }

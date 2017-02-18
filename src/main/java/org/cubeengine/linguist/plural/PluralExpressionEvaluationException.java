@@ -20,25 +20,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n;
+package org.cubeengine.linguist.plural;
 
-import java.util.Locale;
-import org.cubeengine.linguist.language.GermanyLanguageDefinition;
-import org.cubeengine.linguist.language.LanguageDefinition;
-import org.cubeengine.linguist.loader.DefinitionLoadingException;
-import org.cubeengine.linguist.loader.LanguageLoader;
+import org.cubeengine.linguist.LinguistException;
 
-public class I18nLanguageLoader extends LanguageLoader
+/**
+ * Exception gets thrown if the {@link PluralExpr#evaluate(int)} method fails.
+ */
+public class PluralExpressionEvaluationException extends LinguistException
 {
-    private final GermanyLanguageDefinition germanyLanguageDefinition = new GermanyLanguageDefinition();
+    private static final long serialVersionUID = 5172597071726474615L;
 
-    @Override
-    public LanguageDefinition loadDefinition(final Locale locale) throws DefinitionLoadingException
+    /**
+     * Constructor.
+     *
+     * @param message The error message.
+     */
+    public PluralExpressionEvaluationException(final String message)
     {
-        if (Locale.GERMANY.equals(locale))
-        {
-            return germanyLanguageDefinition;
-        }
-        return null;
+        super(message);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param message The error message.
+     * @param t       The error cause.
+     */
+    public PluralExpressionEvaluationException(final String message, final Throwable t)
+    {
+        super(message, t);
     }
 }

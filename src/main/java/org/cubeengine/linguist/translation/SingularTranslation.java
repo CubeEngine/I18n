@@ -20,25 +20,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n;
+package org.cubeengine.linguist.translation;
 
-import java.util.Locale;
-import org.cubeengine.linguist.language.GermanyLanguageDefinition;
-import org.cubeengine.linguist.language.LanguageDefinition;
-import org.cubeengine.linguist.loader.DefinitionLoadingException;
-import org.cubeengine.linguist.loader.LanguageLoader;
-
-public class I18nLanguageLoader extends LanguageLoader
+public class SingularTranslation extends AbstractTranslation
 {
-    private final GermanyLanguageDefinition germanyLanguageDefinition = new GermanyLanguageDefinition();
+    private String translation;
 
-    @Override
-    public LanguageDefinition loadDefinition(final Locale locale) throws DefinitionLoadingException
+    public SingularTranslation(final String context, final String singularId, final String translation)
     {
-        if (Locale.GERMANY.equals(locale))
-        {
-            return germanyLanguageDefinition;
-        }
+        super(context, singularId);
+
+        this.translation = translation;
+    }
+
+    public String getPluralId()
+    {
         return null;
+    }
+
+    public String getTranslation(final int n) throws TranslationException
+    {
+        if (n != 0)
+        {
+            throw new TranslationException("A singular translation doesn't have a number different from 0.");
+        }
+
+        return this.translation;
+    }
+
+    public void setTranslation(final String translation, final int index) throws TranslationException
+    {
+        if (index != 0)
+        {
+            throw new TranslationException("A singular translation doesn't have a number different from 0.");
+        }
+
+        this.translation = translation;
+    }
+
+    public int getTranslationCount()
+    {
+        return 1;
+    }
+
+    public boolean isPluralTranslation()
+    {
+        return false;
     }
 }

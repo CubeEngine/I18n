@@ -20,25 +20,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n;
+package org.cubeengine.linguist.language;
 
 import java.util.Locale;
-import org.cubeengine.linguist.language.GermanyLanguageDefinition;
-import org.cubeengine.linguist.language.LanguageDefinition;
-import org.cubeengine.linguist.loader.DefinitionLoadingException;
-import org.cubeengine.linguist.loader.LanguageLoader;
+import org.cubeengine.linguist.plural.NotOneExpr;
+import org.cubeengine.linguist.plural.PluralExpr;
 
-public class I18nLanguageLoader extends LanguageLoader
+/**
+ * An example language definition for tests.
+ */
+public class GermanyLanguageDefinition extends AbstractLanguageDefinition
 {
-    private final GermanyLanguageDefinition germanyLanguageDefinition = new GermanyLanguageDefinition();
-
-    @Override
-    public LanguageDefinition loadDefinition(final Locale locale) throws DefinitionLoadingException
+    public Locale getLocale()
     {
-        if (Locale.GERMANY.equals(locale))
-        {
-            return germanyLanguageDefinition;
-        }
-        return null;
+        return Locale.GERMANY;
+    }
+
+    public Locale getParent()
+    {
+        return Locale.GERMAN;
+    }
+
+    public Locale[] getClones()
+    {
+        return new Locale[0];
+    }
+
+    public int getPluralCount()
+    {
+        return 2;
+    }
+
+    public PluralExpr getPluralExpression()
+    {
+        return new NotOneExpr();
     }
 }

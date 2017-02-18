@@ -20,25 +20,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n;
+package org.cubeengine.linguist;
 
 import java.util.Locale;
-import org.cubeengine.linguist.language.GermanyLanguageDefinition;
-import org.cubeengine.linguist.language.LanguageDefinition;
-import org.cubeengine.linguist.loader.DefinitionLoadingException;
+import org.cubeengine.linguist.language.Language;
+import org.cubeengine.linguist.language.SourceLanguage;
 import org.cubeengine.linguist.loader.LanguageLoader;
+import org.cubeengine.linguist.loader.TranslationLoader;
 
-public class I18nLanguageLoader extends LanguageLoader
+/**
+ * DESC.
+ */
+public interface Linguist
 {
-    private final GermanyLanguageDefinition germanyLanguageDefinition = new GermanyLanguageDefinition();
+    SourceLanguage getSourceLanguage();
 
-    @Override
-    public LanguageDefinition loadDefinition(final Locale locale) throws DefinitionLoadingException
-    {
-        if (Locale.GERMANY.equals(locale))
-        {
-            return germanyLanguageDefinition;
-        }
-        return null;
-    }
+    TranslationLoader getTranslationLoader();
+
+    LanguageLoader getLanguageLoader();
+
+    Language getLanguage(Locale locale) throws LinguistException;
+
+    Locale getDefaultLocale();
+
+    Language getDefaultLanguage() throws LinguistException;
+
+    String translate(String context, String singularId);
+
+    String translate(Locale locale, String context, String singularId);
+
+    String translateN(String context, String singularId, String pluralId);
+
+    String translateN(Locale locale, String context, String singularId, String pluralId);
 }

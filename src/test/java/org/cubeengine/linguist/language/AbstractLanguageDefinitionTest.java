@@ -20,25 +20,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n;
+package org.cubeengine.linguist.language;
 
-import java.util.Locale;
-import org.cubeengine.linguist.language.GermanyLanguageDefinition;
-import org.cubeengine.linguist.language.LanguageDefinition;
-import org.cubeengine.linguist.loader.DefinitionLoadingException;
-import org.cubeengine.linguist.loader.LanguageLoader;
+import org.junit.Test;
 
-public class I18nLanguageLoader extends LanguageLoader
+import static org.junit.Assert.assertEquals;
+
+/**
+ * Tests the {@link AbstractLanguageDefinition} class.
+ */
+public class AbstractLanguageDefinitionTest
 {
-    private final GermanyLanguageDefinition germanyLanguageDefinition = new GermanyLanguageDefinition();
-
-    @Override
-    public LanguageDefinition loadDefinition(final Locale locale) throws DefinitionLoadingException
+    @Test
+    public void testGetName()
     {
-        if (Locale.GERMANY.equals(locale))
-        {
-            return germanyLanguageDefinition;
-        }
-        return null;
+        assertEquals("German (Germany)", new GermanyLanguageDefinition().getName());
+    }
+
+    @Test
+    public void testGetLocalName()
+    {
+        assertEquals("Deutsch (Deutschland)", new GermanyLanguageDefinition().getLocalName());
     }
 }

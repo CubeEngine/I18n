@@ -22,13 +22,15 @@
  */
 package de.cubeisland.engine.i18n;
 
-import de.cubeisland.engine.i18n.language.ClonedLanguage;
-import de.cubeisland.engine.i18n.language.DefinitionLoadingException;
-import de.cubeisland.engine.i18n.language.Language;
-import de.cubeisland.engine.i18n.language.LanguageLoader;
-import de.cubeisland.engine.i18n.language.SourceLanguage;
-import de.cubeisland.engine.i18n.translation.TranslationLoader;
-import de.cubeisland.engine.i18n.translation.TranslationLoadingException;
+import org.cubeengine.linguist.LinguistException;
+import org.cubeengine.linguist.language.ClonedLanguage;
+import org.cubeengine.linguist.loader.DefinitionLoadingException;
+import org.cubeengine.linguist.language.Language;
+import org.cubeengine.linguist.loader.LanguageLoader;
+import org.cubeengine.linguist.language.SourceLanguage;
+import org.cubeengine.linguist.loader.TranslationLoader;
+import org.cubeengine.linguist.loader.TranslationLoadingException;
+import org.cubeengine.linguist.translation.TranslationException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -180,15 +182,16 @@ public class I18nService
         }
         catch (DefinitionLoadingException e)
         {
-            throw new TranslationException(e);
+            //throw new LinguistException("", e);
         }
-        catch (TranslationLoadingException e)
+        catch (TranslationException e)
         {
-            throw new TranslationException(e);
+            //throw new LinguistException("", e);
         }
+        return null;
     }
 
-    private String translate0(Locale locale, String context, String singular, String plural, int n, boolean isPlural, boolean fallbackToBaseLocale) throws DefinitionLoadingException, TranslationLoadingException
+    private String translate0(Locale locale, String context, String singular, String plural, int n, boolean isPlural, boolean fallbackToBaseLocale) throws DefinitionLoadingException, TranslationException
     {
         Language language = this.getLanguage(locale);
         if (language != null)
