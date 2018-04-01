@@ -8,14 +8,14 @@
         <version>9</version>
     </parent>
 
-    <groupId>de.cubeisland.engine</groupId>
+    <groupId>org.cubeengine</groupId>
     <artifactId>i18n</artifactId>
     <version>1.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>I18n</name>
     <description>A I18n library for Java</description>
-    <url>http://cubeisland.de/engine</url>
+    <url>http://cubeengine.org</url>
     <inceptionYear>2013</inceptionYear>
 
     <licenses>
@@ -50,7 +50,7 @@
         <developer>
             <id>pschichtel</id>
             <name>Phillip Schichtel</name>
-            <email>phillip.public@schich.tel</email>
+            <email>phillip@schich.tel</email>
             <roles>
                 <role>Project Lead</role>
             </roles>
@@ -81,12 +81,12 @@
         <dependency>
             <groupId>org.fedorahosted.tennera</groupId>
             <artifactId>jgettext</artifactId>
-            <version>0.14</version>
+            <version>0.15.1</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
-            <version>3.0.7</version>
+            <version>3.0.8</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -190,7 +190,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.10.4</version>
+                        <version>3.0.0</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
