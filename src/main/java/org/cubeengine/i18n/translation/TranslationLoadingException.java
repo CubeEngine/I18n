@@ -20,9 +20,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n.plural;
+package org.cubeengine.i18n.translation;
 
-public interface PluralExpr
+public class TranslationLoadingException extends Exception
 {
-    int evaluate(int n);
+    public TranslationLoadingException()
+    {
+    }
+
+    public TranslationLoadingException(String message)
+    {
+        super(message);
+    }
+
+    public TranslationLoadingException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
+
+    public TranslationLoadingException(Throwable cause)
+    {
+        super(cause);
+    }
 }

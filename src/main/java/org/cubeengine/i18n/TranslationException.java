@@ -20,25 +20,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n.language;
+package org.cubeengine.i18n;
 
-public class DefinitionLoadingException extends Exception
+public class TranslationException extends RuntimeException
 {
-    public DefinitionLoadingException()
+    public TranslationException()
     {
     }
 
-    public DefinitionLoadingException(String message)
+    public TranslationException(String message)
     {
         super(message);
     }
 
-    public DefinitionLoadingException(String message, Throwable cause)
+    public TranslationException(String message, Throwable cause)
     {
         super(message, cause);
     }
 
-    public DefinitionLoadingException(Throwable cause)
+    public TranslationException(Throwable cause)
     {
         super(cause);
     }

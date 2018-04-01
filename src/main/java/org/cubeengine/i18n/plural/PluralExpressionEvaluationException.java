@@ -20,11 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n.translation;
+package org.cubeengine.i18n.plural;
 
-import java.util.Locale;
-
-public interface TranslationLoader
+public class PluralExpressionEvaluationException extends RuntimeException
 {
-    TranslationContainer loadTranslations(TranslationContainer container, Locale locale) throws TranslationLoadingException;
+    public PluralExpressionEvaluationException(String message)
+    {
+        super(message);
+    }
+
+    public PluralExpressionEvaluationException(String message, Throwable t)
+    {
+        super(message, t);
+    }
 }

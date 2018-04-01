@@ -20,11 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n.language;
+package org.cubeengine.i18n.language;
 
-import de.cubeisland.engine.i18n.plural.NotOneExpr;
-import de.cubeisland.engine.i18n.plural.PluralExpr;
-import de.cubeisland.engine.i18n.translation.TranslationContainer;
+import org.cubeengine.i18n.plural.NotOneExpr;
+import org.cubeengine.i18n.plural.PluralExpr;
+import org.cubeengine.i18n.translation.TranslationContainer;
 
 import java.util.Locale;
 

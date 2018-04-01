@@ -20,26 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n;
+package org.cubeengine.i18n.plural;
 
-public class TranslationException extends RuntimeException
+public class ZeroExpr implements PluralExpr
 {
-    public TranslationException()
+    public int evaluate(int n)
     {
-    }
-
-    public TranslationException(String message)
-    {
-        super(message);
-    }
-
-    public TranslationException(String message, Throwable cause)
-    {
-        super(message, cause);
-    }
-
-    public TranslationException(Throwable cause)
-    {
-        super(cause);
+        return 0;
     }
 }

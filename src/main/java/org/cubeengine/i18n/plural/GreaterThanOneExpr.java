@@ -20,12 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n.plural;
+package org.cubeengine.i18n.plural;
 
-public class NotOneExpr implements PluralExpr
+public class GreaterThanOneExpr implements PluralExpr
 {
     public int evaluate(int n)
     {
-        return n != 1 ? 1 : 0;
+        return n > 1 ? 1 : 0;
     }
 }

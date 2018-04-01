@@ -20,12 +20,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n.plural;
+package org.cubeengine.i18n.language;
 
-public class ZeroExpr implements PluralExpr
+public class DefinitionLoadingException extends Exception
 {
-    public int evaluate(int n)
+    public DefinitionLoadingException()
     {
-        return 0;
+    }
+
+    public DefinitionLoadingException(String message)
+    {
+        super(message);
+    }
+
+    public DefinitionLoadingException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
+
+    public DefinitionLoadingException(Throwable cause)
+    {
+        super(cause);
     }
 }

@@ -20,28 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n.language;
+package org.cubeengine.i18n.plural;
 
-import de.cubeisland.engine.i18n.plural.PluralExpr;
-
-import java.util.Locale;
-
-/**
- * This configuration is used to parse the language configurations.
- */
-public interface LanguageDefinition
+public interface PluralExpr
 {
-    Locale getLocale();
-
-    String getName();
-
-    String getLocalName();
-
-    Locale getParent();
-
-    Locale[] getClones();
-
-    int getPluralCount();
-
-    PluralExpr getPluralExpression();
+    int evaluate(int n);
 }

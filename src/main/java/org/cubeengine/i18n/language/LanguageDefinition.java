@@ -20,17 +20,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n.plural;
+package org.cubeengine.i18n.language;
 
-public class PluralExpressionEvaluationException extends RuntimeException
+import org.cubeengine.i18n.plural.PluralExpr;
+
+import java.util.Locale;
+
+/**
+ * This configuration is used to parse the language configurations.
+ */
+public interface LanguageDefinition
 {
-    public PluralExpressionEvaluationException(String message)
-    {
-        super(message);
-    }
+    Locale getLocale();
 
-    public PluralExpressionEvaluationException(String message, Throwable t)
-    {
-        super(message, t);
-    }
+    String getName();
+
+    String getLocalName();
+
+    Locale getParent();
+
+    Locale[] getClones();
+
+    int getPluralCount();
+
+    PluralExpr getPluralExpression();
 }

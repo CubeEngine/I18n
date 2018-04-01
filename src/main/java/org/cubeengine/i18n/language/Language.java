@@ -20,9 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n.language;
+package org.cubeengine.i18n.language;
 
-import de.cubeisland.engine.i18n.translation.TranslationContainer;
+import org.cubeengine.i18n.plural.PluralExpr;
+import org.cubeengine.i18n.translation.TranslationContainer;
 
 import java.util.Locale;
 
@@ -77,7 +78,7 @@ public interface Language
     String getTranslation(String singular);
 
     /**
-     * Gets a plural translation from this language based on the amount or singular translation if the {@link de.cubeisland.engine.i18n.plural.PluralExpr} returns 0
+     * Gets a plural translation from this language based on the amount or singular translation if the {@link PluralExpr} returns 0
      *
      * @param singular the message in singular form
      * @param plural the message in plural form

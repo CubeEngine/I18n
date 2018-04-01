@@ -20,11 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n.loader;
+package org.cubeengine.i18n.loader;
 
-import de.cubeisland.engine.i18n.translation.TranslationContainer;
-import de.cubeisland.engine.i18n.translation.TranslationLoader;
-import de.cubeisland.engine.i18n.translation.TranslationLoadingException;
+import org.cubeengine.i18n.translation.TranslationContainer;
+import org.cubeengine.i18n.translation.TranslationLoader;
+import org.cubeengine.i18n.translation.TranslationLoadingException;
 import org.fedorahosted.tennera.jgettext.Catalog;
 import org.fedorahosted.tennera.jgettext.Message;
 import org.fedorahosted.tennera.jgettext.PoParser;

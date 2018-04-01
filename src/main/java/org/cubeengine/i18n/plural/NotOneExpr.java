@@ -20,41 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.cubeisland.engine.i18n.plural;
+package org.cubeengine.i18n.plural;
 
-import org.codehaus.commons.compiler.CompileException;
-import org.codehaus.janino.ExpressionEvaluator;
-
-import java.lang.reflect.InvocationTargetException;
-
-public class ComplexExpr implements PluralExpr
+public class NotOneExpr implements PluralExpr
 {
-    private static final String[] ARG_NAMES = {"n"};
-    private static final Class[] ARG_TYPES = {int.class};
-
-    private final ExpressionEvaluator ee;
-
-    public ComplexExpr(String expression)
-    {
-        try
-        {
-            this.ee = new ExpressionEvaluator(expression, int.class, ARG_NAMES, ARG_TYPES);
-        }
-        catch (CompileException e)
-        {
-            throw new IllegalArgumentException("Failed to compile the given expression '" + expression + "' !", e);
-        }
-    }
-
     public int evaluate(int n)
     {
-        try
-        {
-            return (Integer)ee.evaluate(new Object[] {n});
-        }
-        catch (InvocationTargetException e)
-        {
-            throw new PluralExpressionEvaluationException("Failed to evaluate a plural expression!", e);
-        }
+        return n != 1 ? 1 : 0;
     }
 }
