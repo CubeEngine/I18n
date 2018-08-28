@@ -22,17 +22,19 @@
  */
 package org.cubeengine.i18n.plural;
 
+import org.cubeengine.i18n.plural.ExprParser.Expr;
+
 public class ComplexExpr implements PluralExpr
 {
-    private String expression;
+    private final Expr expr;
 
     public ComplexExpr(String expression)
     {
-        this.expression = expression;
+        this.expr = ExprParser.parse(expression);
     }
 
     public int evaluate(int n)
     {
-        throw new UnsupportedOperationException("Failed to evaluate a plural expression! " + this.expression);
+        return this.expr.eval(n);
     }
 }
