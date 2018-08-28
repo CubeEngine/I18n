@@ -25,31 +25,35 @@ package org.cubeengine.i18n.loader;
 import org.cubeengine.i18n.translation.TranslationContainer;
 import org.cubeengine.i18n.translation.TranslationLoader;
 import org.cubeengine.i18n.translation.TranslationLoadingException;
-import org.fedorahosted.tennera.jgettext.Catalog;
-import org.fedorahosted.tennera.jgettext.Message;
-import org.fedorahosted.tennera.jgettext.PoParser;
 
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GettextLoader implements TranslationLoader
 {
-    private final PoParser parser;
     private final List<URL> poFiles;
     private final Charset charset;
+
+    private static Pattern bigPattern = Pattern.compile("(msgid (\".*\"\\n)+)((msgstr (\".*\"\\n)+)|(msgid_plural (\".*\"\\n)+(msgstr\\[\\d+] (\".*\"\\n)+)+))");
+    private static Pattern pluralPattern = Pattern.compile("(msgid ((\".*\"\\n)+))msgid_plural ((\".*\"\\n)+)((msgstr\\[\\d+] ((\".*\"\\n)+))+)");
+    private static Pattern pluralTPattern = Pattern.compile("msgstr\\[\\d+] ((\".*\"\\n)+)");
+    private static Pattern singularPattern = Pattern.compile("(msgid ((\".*\"\\n)+))msgstr ((\".*\"\\n)+)");
 
     public GettextLoader(Charset charset, List<URL> poFiles)
     {
         this.charset = charset;
         this.poFiles = poFiles;
-        this.parser = new PoParser();
     }
 
     public TranslationContainer loadTranslations(TranslationContainer container, Locale locale) throws TranslationLoadingException
@@ -68,29 +72,72 @@ public class GettextLoader implements TranslationLoader
         }
         for (URL url : loadFrom)
         {
-            Catalog catalog = this.parseCatalog(url);
-            if (catalog != null)
+            try
             {
-                for (Message message : catalog)
+                StringBuilder sb = new StringBuilder();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream(), this.charset));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null)
                 {
-                    singularMessages.put(message.getMsgid(), message.getMsgstr());
-                    pluralMessages.put(message.getMsgidPlural(), message.getMsgstrPlural().toArray(new String[message.getMsgstrPlural().size()]));
+                    sb.append(inputLine).append("\n");
                 }
+                in.close();
+
+                String content = sb.toString();
+                parseTranslations(content, singularMessages, pluralMessages);
             }
+            catch (Exception e)
+            {
+                throw new IllegalStateException(e);
+            }
+
             container.merge(singularMessages, pluralMessages);
         }
         return container;
     }
 
-    private Catalog parseCatalog(URL url) throws TranslationLoadingException
+    public void parseTranslations(String lines, Map<String, String> singular, Map<String, String[]> plural)
     {
-        try
+        Matcher matcher = bigPattern.matcher(lines);
+        while (matcher.find())
         {
-            return this.parser.parseCatalog(url.openStream(), charset, true);
+            String group = matcher.group();
+            Matcher sMatcher = singularPattern.matcher(group);
+            Matcher pMatcher = pluralPattern.matcher(group);
+            if (sMatcher.find())
+            {
+                singular.put(mergeString(sMatcher.group(2)), mergeString(sMatcher.group(4)));
+            }
+            if (pMatcher.find())
+            {
+                String plurals = pMatcher.group(6);
+
+                Matcher ptMatcher = pluralTPattern.matcher(plurals);
+                List<String> pluralT = new ArrayList<String>();
+                while (ptMatcher.find())
+                {
+                    pluralT.add(mergeString(ptMatcher.group(1)));
+                }
+
+                plural.put(mergeString(pMatcher.group(4)), pluralT.toArray(new String[0]));
+
+            }
         }
-        catch (IOException e)
+    }
+
+    private static String mergeString(String lines) {
+        StringBuilder sb = new StringBuilder();
+        for (String line : lines.split("\n"))
         {
-            throw new TranslationLoadingException(e);
+            line = line.substring(1, line.length() - 1)
+                .replace("\\n", "\n")
+                .replace("\\r", "\r")
+                .replace("\\t", "\t")
+                .replace("\\\\", "\\")
+                .replace("\\\"", "\"");
+            sb.append(line);
         }
+        return sb.toString();
     }
 }
