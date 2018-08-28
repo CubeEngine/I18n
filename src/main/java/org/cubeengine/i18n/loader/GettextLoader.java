@@ -89,7 +89,7 @@ public class GettextLoader implements TranslationLoader
             }
             catch (Exception e)
             {
-                throw new IllegalStateException(e);
+                throw new TranslationLoadingException(e);
             }
 
             container.merge(singularMessages, pluralMessages);
