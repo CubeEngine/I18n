@@ -22,17 +22,30 @@
  */
 package org.cubeengine.i18n.plural;
 
-public class ComplexExpr implements PluralExpr
-{
-    private String expression;
+import org.junit.Assert;
+import org.junit.Test;
 
-    public ComplexExpr(String expression)
+public class ComplexExprTest
+{
+    @Test
+    public void testComplexExpr()
     {
-        this.expression = expression;
+        // some plural forms from http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/pluralforms.html
+        this.testExpression("0", 0, 0, 0);
+        this.testExpression("n > 1", 0, 0, 1, 1);
+        this.testExpression("n != 1", 1, 0, 1, 1);
+        this.testExpression("n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2", 2, 0, 1, 1);
+        this.testExpression("n==1 ? 0 : n==2 ? 1 : 2", 2, 0, 1, 2);
+        // TODO maybe do more?
     }
 
-    public int evaluate(int n)
+    void testExpression(String expr, int... outputs)
     {
-        throw new UnsupportedOperationException("Failed to evaluate a plural expression! " + this.expression);
+        ComplexExpr expression = new ComplexExpr(expr);
+        for (int input = 0; input < outputs.length; input++)
+        {
+            int output = outputs[input];
+            Assert.assertEquals(expression.evaluate(input), output);
+        }
     }
 }
