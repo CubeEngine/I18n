@@ -37,4 +37,9 @@ public class ComplexExpr implements PluralExpr
     {
         return this.expr.eval(n);
     }
+
+    @Override
+    public String toString() {
+        return "ComplexExpr(expr=" + expr + ")";
+    }
 }

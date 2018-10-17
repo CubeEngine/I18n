@@ -22,11 +22,32 @@
  */
 package org.cubeengine.i18n.plural;
 
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.cubeengine.i18n.plural.ExprParser.parse;
+import static org.junit.Assert.assertEquals;
 
 public class ComplexExprTest
 {
+    @Test
+    public void testLiterals() {
+        assertEquals(100, parse("100").eval(0));
+        assertEquals(123, parse("123").eval(0));
+        assertEquals(0, parse("0").eval(0));
+    }
+
+    @Test
+    public void testSimpleExpr() {
+        assertEquals(0, parse("!1").eval(0));
+        assertEquals(1, parse("!0").eval(0));
+        assertEquals(2, parse("1 * 2").eval(0));
+        assertEquals(4, parse("1 * 2 * 2").eval(0));
+        assertEquals(5, parse("1 + 2 * 2").eval(0));
+        assertEquals(6, parse("(1 + 2) * 2").eval(0));
+        assertEquals(1, parse("(1 + 2 * 2) < 6").eval(0));
+        assertEquals(1, parse("1 + 2 * 2 < 6").eval(0));
+    }
+
     @Test
     public void testComplexExpr()
     {
@@ -39,13 +60,19 @@ public class ComplexExprTest
         // TODO maybe do more?
     }
 
-    void testExpression(String expr, int... outputs)
+    private void testExpression(String expr, int... outputs)
     {
+        System.out.println("Expression: " + expr);
         ComplexExpr expression = new ComplexExpr(expr);
+        System.out.println("Parsed:     " + expression);
         for (int input = 0; input < outputs.length; input++)
         {
-            int output = outputs[input];
-            Assert.assertEquals(expression.evaluate(input), output);
+            System.out.println("\tInput:    " + input);
+            final int expected = outputs[input];
+            final int actual = expression.evaluate(input);
+            System.out.println("\tExpected: " + expected);
+            System.out.println("\tActual:   " + actual);
+            assertEquals(actual, expected);
         }
     }
 }
