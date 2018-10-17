@@ -72,7 +72,7 @@
     </developers>
 
     <properties>
-        <jdkVersion>1.5</jdkVersion>
+        <jdkVersion>1.6</jdkVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <releaseProfile>release</releaseProfile>
     </properties>
