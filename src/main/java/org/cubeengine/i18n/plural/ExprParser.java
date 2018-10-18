@@ -147,7 +147,7 @@ public class ExprParser {
             s.consume(')');
             return e;
         } else if (c == '!') {
-            return parseNegationn(s);
+            return parseNegation(s);
         } else {
             return parseLiteral(s);
         }
@@ -202,14 +202,14 @@ public class ExprParser {
         return new TernaryOperatorExpr(condition, truePath, falsePath);
     }
 
-    private static Expr parseNegationn(State s) {
+    private static Expr parseNegation(State s) {
         s.consume('!');
-        UnaryOperator op = new UnaryOperator() {
+        UnaryOperator op = namedUnary("!%s", new UnaryOperator() {
             @Override
             public int apply(int v) {
                 return v != 0 ? 0 : 1;
             }
-        };
+        });
         Expr value = parseExpr(s);
 
         return new UnaryOperatorExpr(op, value);
@@ -221,14 +221,14 @@ public class ExprParser {
             case '>':
                 if (s.peek() == '=') {
                     s.consume();
-                    return namedOp(">=", new ComparisonOperator() {
+                    return namedBinary(">=", new ComparisonOperator() {
                         @Override
                         public boolean compare(int lhs, int rhs) {
                             return lhs >= rhs;
                         }
                     });
                 } else {
-                    return namedOp(">", new ComparisonOperator() {
+                    return namedBinary(">", new ComparisonOperator() {
                         @Override
                         public boolean compare(int lhs, int rhs) {
                             return lhs > rhs;
@@ -238,14 +238,14 @@ public class ExprParser {
             case '<':
                 if (s.peek() == '=') {
                     s.consume();
-                    return namedOp("<=", new ComparisonOperator() {
+                    return namedBinary("<=", new ComparisonOperator() {
                         @Override
                         public boolean compare(int lhs, int rhs) {
                             return lhs <= rhs;
                         }
                     });
                 } else {
-                    return namedOp("<", new ComparisonOperator() {
+                    return namedBinary("<", new ComparisonOperator() {
                         @Override
                         public boolean compare(int lhs, int rhs) {
                             return lhs < rhs;
@@ -254,7 +254,7 @@ public class ExprParser {
                 }
             case '!':
                 s.consume('=');
-                return namedOp("!=", new ComparisonOperator() {
+                return namedBinary("!=", new ComparisonOperator() {
                     @Override
                     public boolean compare(int lhs, int rhs) {
                         return lhs != rhs;
@@ -262,7 +262,7 @@ public class ExprParser {
                 });
             default:
                 s.consume('=');
-                return namedOp("==", new ComparisonOperator() {
+                return namedBinary("==", new ComparisonOperator() {
                     @Override
                     public boolean compare(int lhs, int rhs) {
                         return lhs == rhs;
@@ -274,14 +274,14 @@ public class ExprParser {
     private static BinaryOperator parseSumOp(State s) {
         switch (s.consume("+-")) {
             case '+':
-                return namedOp("+", new BinaryOperator() {
+                return namedBinary("+", new BinaryOperator() {
                     @Override
                     public int apply(int lhs, int rhs) {
                         return lhs + rhs;
                     }
                 });
             default:
-                return namedOp("-", new BinaryOperator() {
+                return namedBinary("-", new BinaryOperator() {
                     @Override
                     public int apply(int lhs, int rhs) {
                         return lhs - rhs;
@@ -293,21 +293,21 @@ public class ExprParser {
     private static BinaryOperator parseProductOp(State s) {
         switch (s.consume("*/%")) {
             case '*':
-                return namedOp("*", new BinaryOperator() {
+                return namedBinary("*", new BinaryOperator() {
                     @Override
                     public int apply(int lhs, int rhs) {
                         return lhs * rhs;
                     }
                 });
             case '/':
-                return namedOp("/", new BinaryOperator() {
+                return namedBinary("/", new BinaryOperator() {
                     @Override
                     public int apply(int lhs, int rhs) {
                         return lhs / rhs;
                     }
                 });
             default:
-                return namedOp("%", new BinaryOperator() {
+                return namedBinary("%", new BinaryOperator() {
                     @Override
                     public int apply(int lhs, int rhs) {
                         return lhs % rhs;
@@ -316,7 +316,21 @@ public class ExprParser {
         }
     }
 
-    private static BinaryOperator namedOp(final String name, final BinaryOperator inner) {
+    private static UnaryOperator namedUnary(final String name, final UnaryOperator inner) {
+        return new UnaryOperator() {
+            @Override
+            public int apply(int v) {
+                return inner.apply(v);
+            }
+
+            @Override
+            public String toString() {
+                return name;
+            }
+        };
+    }
+
+    private static BinaryOperator namedBinary(final String name, final BinaryOperator inner) {
         return new BinaryOperator() {
             @Override
             public int apply(int lhs, int rhs) {

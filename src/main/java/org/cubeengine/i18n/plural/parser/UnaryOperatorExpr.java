@@ -16,6 +16,6 @@ public class UnaryOperatorExpr extends Expr {
 
     @Override
     public String toString() {
-        return "(~" + value + ")";
+        return "(" + String.format(op.toString(), value) + ")";
     }
 }

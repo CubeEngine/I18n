@@ -13,6 +13,6 @@ public class LiteralExpr extends Expr {
 
     @Override
     public String toString() {
-        return "(" + literal + ")";
+        return "" + literal;
     }
 }
