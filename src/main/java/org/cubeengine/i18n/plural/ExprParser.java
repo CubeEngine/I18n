@@ -26,26 +26,25 @@ import org.cubeengine.i18n.plural.parser.*;
 
 /**
  * expr         := disjunction
- * disjunction  := conjunction '||' expr
+ * ternary      := conjunction ? ternary : ternary
  *               | conjunction
- * conjunction  := comparison '&&' expr
+ * disjunction  := conjunction '||' disjunction
+ *               | conjunction
+ * conjunction  := comparison '&&' conjunction
  *               | comparison
- * comparison   := sum comparisonOp expr
+ * comparison   := sum comparisonOp comparison
  *               | sum
  * comparisonOp := '>=' | '<=' | '<' | '>' | '==' | '!='
- * sum          := product sumOp expr
+ * sum          := product sumOp sum
  *               | product
  * sumOp        := '+' | '-'
- * product      := factor productOp expr
+ * product      := factor productOp product
  *               | factor
  * productOp    := '*' | '/' | '%'
  * factor       := variable
  *               | literal
  *               | '(' expr ')'
  *               | '!' expr
- *
- * ??? ->
- * ternary      := expr '?' expr ':' expr
  */
 public class ExprParser {
 
@@ -55,12 +54,25 @@ public class ExprParser {
         if (s.hasMore()) {
             throw new RuntimeException("Result is incomplete!");
         }
-        System.out.println("Parse result: " + result);
         return result;
     }
 
     private static Expr parseExpr(State s) {
-        return parseDisjunction(s);
+        return parseTernary(s);
+    }
+
+    private static Expr parseTernary(State s) {
+        Expr condition = parseDisjunction(s);
+        if (s.hasMore() && s.peek() == '?') {
+            s.consume();
+            Expr truePath = parseTernary(s);
+            s.consume(':');
+            Expr falsePath = parseTernary(s);
+
+            return new TernaryOperatorExpr(condition, truePath, falsePath);
+        } else {
+            return condition;
+        }
     }
 
     private static Expr parseDisjunction(State s) {
@@ -68,13 +80,13 @@ public class ExprParser {
         if (s.hasMore(3) && s.is('|')) {
             s.consume();
             s.consume('|');
-            BinaryOperator op = new BinaryOperator() {
+            BinaryOperator op = namedBinary("||", new BinaryOperator() {
                 @Override
                 public int apply(int lhs, int rhs) {
                     return Expr.toInt(Expr.toBool(lhs) || Expr.toBool(rhs));
                 }
-            };
-            Expr rhs = parseExpr(s);
+            });
+            Expr rhs = parseDisjunction(s);
 
             return new BinaryOperatorExpr(lhs, op, rhs);
         } else {
@@ -87,13 +99,13 @@ public class ExprParser {
         if (s.hasMore(3) && s.is('&')) {
             s.consume();
             s.consume('&');
-            BinaryOperator op = new BinaryOperator() {
+            BinaryOperator op = namedBinary("&&", new BinaryOperator() {
                 @Override
                 public int apply(int lhs, int rhs) {
                     return Expr.toInt(Expr.toBool(lhs) && Expr.toBool(rhs));
                 }
-            };
-            Expr rhs = parseExpr(s);
+            });
+            Expr rhs = parseConjunction(s);
 
             return new BinaryOperatorExpr(lhs, op, rhs);
         } else {
@@ -105,7 +117,7 @@ public class ExprParser {
         Expr lhs = parseSum(s);
         if (s.hasMore() && s.is("<>!=")) {
             BinaryOperator op = parseComparisonOp(s);
-            Expr rhs = parseExpr(s);
+            Expr rhs = parseComparison(s);
 
             return new BinaryOperatorExpr(lhs, op, rhs);
         } else {
@@ -117,7 +129,7 @@ public class ExprParser {
         Expr lhs = parseProduct(s);
         if (s.hasMore() && s.is("+-")) {
             BinaryOperator op = parseSumOp(s);
-            Expr rhs = parseExpr(s);
+            Expr rhs = parseSum(s);
 
             return new BinaryOperatorExpr(lhs, op, rhs);
         } else {
@@ -129,7 +141,7 @@ public class ExprParser {
         Expr lhs = parseFactor(s);
         if (s.hasMore() && s.is("*/%")) {
             BinaryOperator op = parseProductOp(s);
-            Expr rhs = parseExpr(s);
+            Expr rhs = parseProduct(s);
 
             return new BinaryOperatorExpr(lhs, op, rhs);
         } else {
@@ -190,16 +202,6 @@ public class ExprParser {
         } else {
             return next;
         }
-    }
-
-    private static Expr parseTernary(State s) {
-        Expr condition = parseExpr(s);
-        s.consume('?');
-        Expr truePath = parseExpr(s);
-        s.consume(':');
-        Expr falsePath = parseExpr(s);
-
-        return new TernaryOperatorExpr(condition, truePath, falsePath);
     }
 
     private static Expr parseNegation(State s) {
