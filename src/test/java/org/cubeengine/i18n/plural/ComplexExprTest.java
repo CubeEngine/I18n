@@ -34,6 +34,8 @@ public class ComplexExprTest
         assertEquals(100, parse("100").eval(0));
         assertEquals(123, parse("123").eval(0));
         assertEquals(0, parse("0").eval(0));
+        assertEquals(-10, parse("-10").eval(0));
+        assertEquals(+10, parse("+10").eval(0));
     }
 
     @Test
@@ -43,6 +45,7 @@ public class ComplexExprTest
         assertEquals(2, parse("1 * 2").eval(0));
         assertEquals(4, parse("1 * 2 * 2").eval(0));
         assertEquals(5, parse("1 + 2 * 2").eval(0));
+        assertEquals(134, parse("1 + 2 * 3 + 4 * 5 * 6 + 7").eval(0));
         assertEquals(6, parse("(1 + 2) * 2").eval(0));
         assertEquals(1, parse("(1 + 2 * 2) < 6").eval(0));
         assertEquals(1, parse("1 + 2 * 2 < 6").eval(0));

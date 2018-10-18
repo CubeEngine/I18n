@@ -22,6 +22,8 @@
  */
 package org.cubeengine.i18n.plural;
 
+import org.cubeengine.i18n.plural.parser.*;
+
 /**
  * expr         := disjunction
  * disjunction  := conjunction '||' expr
@@ -46,196 +48,6 @@ package org.cubeengine.i18n.plural;
  * ternary      := expr '?' expr ':' expr
  */
 public class ExprParser {
-    private static final String EQUALS = "==";
-    private static final String NOT_EQUALS = "!=";
-    private static final String GREATER = ">";
-    private static final String LESS = "<";
-    private static final String LESS_OR_EQUALS = "<=";
-    private static final String GREATER_OR_EQUALS = ">=";
-    private static final String MULTIPLY = "*";
-    private static final String DIVIDE = "/";
-    private static final String MODULO = "%";
-    private static final String PLUS = "+";
-    private static final String MINUS = "-";
-    private static final String AND = "&&";
-    private static final String OR = "||";
-    private static final String NOT = "!";
-    private static final String OPEN_PARENTHESES = "(";
-    private static final String CLOSE_PARENTHESES = ")";
-
-    public static abstract class Expr {
-        public abstract int eval(int n);
-
-        public boolean isTrue(int n) {
-            return eval(n) != 0;
-        }
-
-        public static boolean toBool(int n) {
-            return n != 0;
-        }
-
-        public static int toInt(boolean b) {
-            return b ? 1 : 0;
-        }
-
-        @Override
-        public String toString() {
-            return "Expr(???)";
-        }
-    }
-
-    public static class LiteralExpr extends Expr {
-        private final int literal;
-
-        public LiteralExpr(int literal) {
-            this.literal = literal;
-        }
-
-        public int eval(int n) {
-            return literal;
-        }
-
-        @Override
-        public String toString() {
-            return "'" + literal + "'";
-        }
-    }
-
-    public static class VariableExpr extends Expr {
-        private static final VariableExpr VAR = new VariableExpr();
-
-        public int eval(int n) {
-            return n;
-        }
-
-        @Override
-        public String toString() {
-            return "n";
-        }
-    }
-
-    public static class UnaryOperatorExpr extends Expr {
-        private final UnaryOperator op;
-        private final Expr value;
-
-        public UnaryOperatorExpr(UnaryOperator op, Expr value) {
-            this.op = op;
-            this.value = value;
-        }
-
-        @Override
-        public int eval(int n) {
-            return op.apply(value.eval(n));
-        }
-
-        @Override
-        public String toString() {
-            return "(~" + value + ")";
-        }
-    }
-
-    public static class BinaryOperatorExpr extends Expr {
-        private final Expr lhs;
-        private final BinaryOperator op;
-        private final Expr rhs;
-
-        public BinaryOperatorExpr(Expr lhs, BinaryOperator op, Expr rhs) {
-            this.lhs = lhs;
-            this.op = op;
-            this.rhs = rhs;
-        }
-
-        @Override
-        public int eval(int n) {
-            return op.apply(lhs.eval(n), rhs.eval(n));
-        }
-
-        @Override
-        public String toString() {
-            return "(" + lhs + "~" + rhs + ")";
-        }
-    }
-
-    public static class TernaryOperatorExpr extends Expr {
-        private final Expr condition;
-        private final Expr truePath;
-        private final Expr falsePath;
-
-        public TernaryOperatorExpr(Expr condition, Expr truePath, Expr falsePath) {
-            this.condition = condition;
-            this.truePath = truePath;
-            this.falsePath = falsePath;
-        }
-
-        @Override
-        public int eval(int n) {
-            return condition.isTrue(n) ? truePath.eval(n) : falsePath.eval(n);
-        }
-
-        @Override
-        public String toString() {
-            return "(" + condition + "?" + truePath + ":" + falsePath + ")";
-        }
-    }
-
-    private static final class State {
-        private final String s;
-        private int offset;
-
-        public State(String s) {
-            this.s = s;
-            this.offset = 0;
-        }
-
-        public char peek() {
-            return this.s.charAt(offset);
-        }
-
-        public char pop() {
-            return this.s.charAt(offset++);
-        }
-
-        public void consume() {
-            this.offset++;
-        }
-
-        public boolean is(char c) {
-            return peek() == c;
-        }
-
-        public boolean is(String s) {
-            return s.indexOf(peek()) != -1;
-        }
-
-        public boolean hasMore() {
-            return this.offset < this.s.length();
-        }
-
-        public boolean hasMore(int n) {
-            return this.offset + n < this.s.length();
-        }
-
-        public char consume(char expected) {
-            char c = pop();
-            if (c != expected) {
-                throw new RuntimeException("expected=" + expected + ", got=" + c);
-            }
-            return c;
-        }
-
-        public char consume(String expected) {
-            char c = pop();
-            if (expected.indexOf(c) == -1) {
-                throw new RuntimeException("expected=" + expected + ", got=" + c);
-            }
-            return c;
-        }
-
-        @Override
-        public String toString() {
-            return "State(offset=" + offset + ", " + (hasMore() ? "current=" + peek() : "depleted") + ")";
-        }
-    }
 
     public static Expr parse(String exprString) {
         State s = new State(exprString.replaceAll("\\s+", ""));
@@ -243,6 +55,7 @@ public class ExprParser {
         if (s.hasMore()) {
             throw new RuntimeException("Result is incomplete!");
         }
+        System.out.println("Parse result: " + result);
         return result;
     }
 
@@ -408,98 +221,171 @@ public class ExprParser {
             case '>':
                 if (s.peek() == '=') {
                     s.consume();
-                    return new ComparisonOperator() {
+                    return namedOp(">=", new ComparisonOperator() {
                         @Override
                         public boolean compare(int lhs, int rhs) {
                             return lhs >= rhs;
                         }
-                    };
+                    });
                 } else {
-                    return new ComparisonOperator() {
+                    return namedOp(">", new ComparisonOperator() {
                         @Override
                         public boolean compare(int lhs, int rhs) {
                             return lhs > rhs;
                         }
-                    };
+                    });
                 }
             case '<':
                 if (s.peek() == '=') {
                     s.consume();
-                    return new ComparisonOperator() {
+                    return namedOp("<=", new ComparisonOperator() {
                         @Override
                         public boolean compare(int lhs, int rhs) {
                             return lhs <= rhs;
                         }
-                    };
+                    });
                 } else {
-                    return new ComparisonOperator() {
+                    return namedOp("<", new ComparisonOperator() {
                         @Override
                         public boolean compare(int lhs, int rhs) {
                             return lhs < rhs;
                         }
-                    };
+                    });
                 }
             case '!':
                 s.consume('=');
-                return new ComparisonOperator() {
+                return namedOp("!=", new ComparisonOperator() {
                     @Override
                     public boolean compare(int lhs, int rhs) {
                         return lhs != rhs;
                     }
-                };
+                });
             default:
                 s.consume('=');
-                return new ComparisonOperator() {
+                return namedOp("==", new ComparisonOperator() {
                     @Override
                     public boolean compare(int lhs, int rhs) {
                         return lhs == rhs;
                     }
-                };
-        }
-    }
-
-    private static BinaryOperator parseProductOp(State s) {
-        switch (s.consume("*/%")) {
-            case '*':
-                return new BinaryOperator() {
-                    @Override
-                    public int apply(int lhs, int rhs) {
-                        return lhs * rhs;
-                    }
-                };
-            case '/':
-                return new BinaryOperator() {
-                    @Override
-                    public int apply(int lhs, int rhs) {
-                        return lhs / rhs;
-                    }
-                };
-            default:
-                return new BinaryOperator() {
-                    @Override
-                    public int apply(int lhs, int rhs) {
-                        return lhs % rhs;
-                    }
-                };
+                });
         }
     }
 
     private static BinaryOperator parseSumOp(State s) {
         switch (s.consume("+-")) {
             case '+':
-                return new BinaryOperator() {
+                return namedOp("+", new BinaryOperator() {
                     @Override
                     public int apply(int lhs, int rhs) {
                         return lhs + rhs;
                     }
-                };
+                });
             default:
-                return new BinaryOperator() {
+                return namedOp("-", new BinaryOperator() {
                     @Override
                     public int apply(int lhs, int rhs) {
                         return lhs - rhs;
                     }
-                };
+                });
+        }
+    }
+
+    private static BinaryOperator parseProductOp(State s) {
+        switch (s.consume("*/%")) {
+            case '*':
+                return namedOp("*", new BinaryOperator() {
+                    @Override
+                    public int apply(int lhs, int rhs) {
+                        return lhs * rhs;
+                    }
+                });
+            case '/':
+                return namedOp("/", new BinaryOperator() {
+                    @Override
+                    public int apply(int lhs, int rhs) {
+                        return lhs / rhs;
+                    }
+                });
+            default:
+                return namedOp("%", new BinaryOperator() {
+                    @Override
+                    public int apply(int lhs, int rhs) {
+                        return lhs % rhs;
+                    }
+                });
+        }
+    }
+
+    private static BinaryOperator namedOp(final String name, final BinaryOperator inner) {
+        return new BinaryOperator() {
+            @Override
+            public int apply(int lhs, int rhs) {
+                return inner.apply(lhs, rhs);
+            }
+
+            @Override
+            public String toString() {
+                return name;
+            }
+        };
+    }
+
+    private static final class State {
+        private final String s;
+        private int offset;
+
+        public State(String s) {
+            this.s = s;
+            this.offset = 0;
+        }
+
+        public char peek() {
+            return this.s.charAt(offset);
+        }
+
+        public char pop() {
+            return this.s.charAt(offset++);
+        }
+
+        public void consume() {
+            this.offset++;
+        }
+
+        public boolean is(char c) {
+            return peek() == c;
+        }
+
+        public boolean is(String s) {
+            return s.indexOf(peek()) != -1;
+        }
+
+        public boolean hasMore() {
+            return this.offset < this.s.length();
+        }
+
+        public boolean hasMore(int n) {
+            return this.offset + n < this.s.length();
+        }
+
+        public char consume(char expected) {
+            char c = pop();
+            if (c != expected) {
+                throw new RuntimeException("expected=" + expected + ", got=" + c);
+            }
+            return c;
+        }
+
+        public char consume(String expected) {
+            char c = pop();
+            if (expected.indexOf(c) == -1) {
+                throw new RuntimeException("expected=" + expected + ", got=" + c);
+            }
+            return c;
+        }
+
+        @Override
+        public String toString() {
+            return "State(offset=" + offset + ", " + (hasMore() ? "current=" + peek() : "depleted") + ")";
         }
     }
 }

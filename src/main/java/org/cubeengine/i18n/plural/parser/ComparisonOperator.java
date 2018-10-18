@@ -1,6 +1,6 @@
-package org.cubeengine.i18n.plural;
+package org.cubeengine.i18n.plural.parser;
 
-abstract class ComparisonOperator implements BinaryOperator {
+public abstract class ComparisonOperator implements BinaryOperator {
     @Override
     public int apply(int lhs, int rhs) {
         return compare(lhs, rhs) ? 1 : 0;

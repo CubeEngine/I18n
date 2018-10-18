@@ -22,7 +22,7 @@
  */
 package org.cubeengine.i18n.plural;
 
-import org.cubeengine.i18n.plural.ExprParser.Expr;
+import org.cubeengine.i18n.plural.parser.Expr;
 
 public class ComplexExpr implements PluralExpr
 {
