@@ -24,7 +24,7 @@ package org.cubeengine.i18n.plural;
 
 import org.cubeengine.i18n.plural.parser.*;
 
-/**
+/*
  * expr         := disjunction
  * ternary      := conjunction ? ternary : ternary
  *               | conjunction
